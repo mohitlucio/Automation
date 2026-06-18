@@ -1,0 +1,37 @@
+# ─── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+build/
+dist/
+.eggs/
+
+# ─── Virtual environments ─────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+.env
+
+# ─── Scraped output / downloads (generated at runtime) ────────────────────────
+# Local runs download PDFs to ~/Desktop/Repositories by default; this guards
+# against a stray Repositories/ folder created inside the repo.
+Repositories/
+*_test_results.json
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+
+# ─── OS / editor cruft ────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# ─── Local backups & large binaries (never commit these) ──────────────────────
+*.localbackup
+*.tar.gz
+*.zip
+google-cloud-cli-*

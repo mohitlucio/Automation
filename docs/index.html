@@ -1,0 +1,2107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucio AI Briefcase</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   RESET & TOKENS — CLEAN FLAT THEME
+   ═══════════════════════════════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#fafafa;--bg2:#f5f5f5;--bg3:#ebebeb;
+  --surf:#ffffff;--surf2:#fafafa;--surf3:#f5f5f5;
+  --border:#e5e5e5;--border2:#d4d4d4;
+  --txt:#171717;--txt2:#737373;--txt3:#a3a3a3;
+  --accent:#171717;--accent2:#404040;--accent-glow:rgba(0,0,0,.06);
+  --green:#16a34a;--green-bg:rgba(22,163,74,.06);--green-glow:rgba(22,163,74,.1);
+  --yellow:#ca8a04;--yellow-bg:rgba(202,138,4,.06);--yellow-glow:rgba(202,138,4,.1);
+  --red:#dc2626;--red-bg:rgba(220,38,38,.05);--red-glow:rgba(220,38,38,.1);
+  --blue:#2563eb;--blue-bg:rgba(37,99,235,.05);
+  --radius:8px;--radius-sm:6px;--radius-xs:4px;
+  --transition:150ms ease;
+  --shadow-sm:none;--shadow-md:0 1px 3px rgba(0,0,0,.08);--shadow-lg:0 4px 20px rgba(0,0,0,.12);
+}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ═══════════════════════════════════════════════════════════════
+   HEADER — Clean flat header
+   ═══════════════════════════════════════════════════════════════ */
+.hero{position:relative;padding:20px 36px 16px;background:var(--surf);border-bottom:1px solid var(--border)}
+.hero-top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-icon{width:32px;height:32px;border-radius:6px;background:var(--txt);display:flex;align-items:center;justify-content:center}
+.brand-icon svg{width:18px;height:18px;fill:#fff}
+.brand h1{font-size:14px;font-weight:700;letter-spacing:-.2px;color:var(--txt);line-height:1.3}
+.brand p{font-size:11px;color:var(--txt3);font-weight:500;margin-top:1px}
+
+.hero-stats{display:flex;gap:16px;flex-wrap:wrap}
+.hero-stat{padding:0;min-width:auto;display:flex;flex-direction:column;align-items:center}
+.hero-stat .hs-val{font-size:18px;font-weight:700;color:var(--txt)}
+.hero-stat .hs-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--txt3);margin-top:1px}
+.hero-stat.stat-ok .hs-val{color:var(--txt)}
+.hero-stat.stat-load .hs-val{color:var(--txt2)}
+.hero-stat.stat-err .hs-val{color:var(--red)}
+
+/* Global progress */
+.global-progress{height:4px;background:var(--bg3);border-radius:2px;margin-top:10px;overflow:hidden}
+.global-progress-bar{height:100%;background:var(--txt3);border-radius:2px;transition:width .4s ease}
+.global-progress-bar.all-done{background:var(--green)}
+.global-progress-bar.has-errors{background:var(--red)}
+.progress-label{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--txt3);font-weight:500}
+
+/* ═══════════════════════════════════════════════════════════════
+   CONTROLS BAR — Sticky, frosted glass
+   ═══════════════════════════════════════════════════════════════ */
+.sticky-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.controls{padding:8px 36px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+
+
+.ctrl-sep{width:1px;height:24px;background:var(--border2)}
+
+.ctrl-input{padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-xs);font-size:12px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none;transition:all var(--transition)}
+.ctrl-input:focus{border-color:var(--txt3)}
+.ctrl-input::placeholder{color:var(--txt3)}
+.ctrl-input[type="date"]{width:128px}
+.ctrl-input[type="date"]::-webkit-calendar-picker-indicator{opacity:.5}
+.ctrl-search{width:220px}
+
+.ctrl-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
+
+.btn{padding:6px 14px;border:1px solid var(--border);border-radius:var(--radius-xs);cursor:pointer;font-size:11.5px;font-weight:600;font-family:inherit;display:inline-flex;align-items:center;gap:5px;transition:all var(--transition);white-space:nowrap;background:var(--surf);color:var(--txt2)}
+.btn:hover{border-color:var(--border2);color:var(--txt);background:var(--bg2)}
+.btn:disabled{opacity:.3;cursor:not-allowed}
+.btn-primary{background:var(--txt);color:#fff;border-color:var(--txt)}
+.btn-primary:hover{background:var(--accent2);border-color:var(--accent2)}
+.btn-green{background:var(--txt);color:#fff;border-color:var(--txt)}
+.btn-green:hover{background:var(--accent2);border-color:var(--accent2)}
+.btn-ghost{border-color:transparent;background:transparent}.btn-ghost:hover{background:var(--bg2)}
+
+/* ═══ SCRAPE LOG DASHBOARD ═══ */
+.sl-overlay{position:fixed;inset:0;z-index:1500;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .2s}
+.sl-overlay.open{opacity:1;pointer-events:all}
+.sl-modal{position:absolute;inset:12px;background:var(--surf);border-radius:var(--radius);display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow-lg)}
+.sl-hdr{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--bg2)}
+.sl-hdr h2{font-size:14px;font-weight:800;flex:1}
+.sl-close{background:transparent;border:none;cursor:pointer;font-size:18px;color:var(--txt3);width:28px;height:28px;border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center}
+.sl-close:hover{background:var(--bg3);color:var(--txt)}
+.sl-stats{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--surf)}
+.sl-stat{flex:1;padding:12px 16px;text-align:center;border-right:1px solid var(--border)}
+.sl-stat:last-child{border-right:none}
+.sl-stat-val{font-size:20px;font-weight:800}
+.sl-stat-label{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--txt3);margin-top:2px;font-weight:600}
+.sl-stat.green .sl-stat-val{color:var(--green)}
+.sl-stat.red .sl-stat-val{color:var(--red)}
+.sl-stat.amber .sl-stat-val{color:var(--yellow)}
+.sl-stat.blue .sl-stat-val{color:var(--blue)}
+.sl-body{flex:1;overflow-y:auto;padding:0}
+.sl-body::-webkit-scrollbar{width:5px}.sl-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.sl-toolbar{display:flex;align-items:center;gap:8px;padding:10px 20px;border-bottom:1px solid var(--border);background:var(--surf2);flex-wrap:wrap}
+.sl-filter-btn{padding:4px 10px;font-size:11px;font-weight:600;border:1px solid var(--border);border-radius:var(--radius-xs);background:var(--surf);cursor:pointer;transition:all var(--transition);font-family:inherit}
+.sl-filter-btn.active{background:var(--txt);color:#fff;border-color:var(--txt)}
+.sl-filter-btn:hover:not(.active){background:var(--bg2)}
+.sl-search{padding:5px 10px;font-size:11px;border:1px solid var(--border);border-radius:var(--radius-xs);background:var(--surf);font-family:inherit;width:200px;outline:none}
+.sl-search:focus{border-color:var(--accent2)}
+.sl-src{border-bottom:1px solid var(--border)}
+.sl-src-hdr{display:flex;align-items:center;gap:8px;padding:10px 20px;cursor:pointer;transition:background var(--transition)}
+.sl-src-hdr:hover{background:var(--bg2)}
+.sl-src-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sl-src-dot.ok{background:var(--green)}
+.sl-src-dot.err{background:var(--red)}
+.sl-src-dot.empty{background:var(--yellow)}
+.sl-src-name{font-size:12px;font-weight:700;flex:1}
+.sl-src-cat{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;background:var(--bg3);color:var(--txt2)}
+.sl-src-count{font-size:11px;font-weight:600;color:var(--txt2)}
+.sl-src-err{font-size:10px;color:var(--red);max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sl-src-arrow{font-size:12px;color:var(--txt3);transition:transform .15s}
+.sl-src.open .sl-src-arrow{transform:rotate(90deg)}
+.sl-src-body{display:none;padding:0 20px 10px 36px}
+.sl-src.open .sl-src-body{display:block}
+.sl-src-link{font-size:10px;color:var(--blue);text-decoration:none;margin-bottom:8px;display:inline-block}
+.sl-src-link:hover{text-decoration:underline}
+.sl-doc-table{width:100%;border-collapse:collapse;font-size:11px}
+.sl-doc-table th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--txt3);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--border);background:var(--bg2)}
+.sl-doc-table td{padding:6px 8px;border-bottom:1px solid var(--bg3);vertical-align:middle}
+.sl-doc-table tr:last-child td{border-bottom:none}
+.sl-doc-title{max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sl-pdf-yes{color:var(--green);font-weight:700;font-size:10px}
+.sl-pdf-no{color:var(--red);font-weight:700;font-size:10px}
+.sl-pdf-link{color:var(--blue);text-decoration:none;font-size:10px}
+.sl-pdf-link:hover{text-decoration:underline}
+.sl-page-link{color:var(--txt2);text-decoration:none;font-size:10px}
+.sl-page-link:hover{color:var(--blue);text-decoration:underline}
+.sl-footer{padding:8px 20px;font-size:10px;color:var(--txt3);border-top:1px solid var(--border);background:var(--bg2);text-align:center;display:flex;justify-content:space-between;align-items:center}
+.sl-no-data{padding:60px 20px;text-align:center;color:var(--txt3)}
+.sl-no-data-icon{font-size:40px;margin-bottom:12px}
+.sl-no-data p{font-size:13px;margin-bottom:8px}
+.sl-no-data .sl-hint{font-size:11px;color:var(--txt3)}
+.sl-badge{display:inline-block;padding:1px 6px;border-radius:8px;font-size:9px;font-weight:700}
+.sl-badge-ok{background:#16a34a18;color:var(--green)}
+.sl-badge-err{background:#dc262618;color:var(--red)}
+.sl-badge-empty{background:#ca8a0418;color:var(--yellow)}
+.sl-live-strip{display:flex;align-items:center;gap:6px;padding:6px 20px;background:#171717;color:#fff;font-size:11px;font-weight:500}
+.sl-live-strip .sl-live-dot{width:6px;height:6px;border-radius:50%;background:#16a34a;animation:cp-pulse 1.2s infinite}
+.sl-refresh-btn{padding:3px 10px;font-size:10px;font-weight:600;border:1px solid rgba(255,255,255,.2);border-radius:var(--radius-xs);background:transparent;color:#fff;cursor:pointer;margin-left:auto;font-family:inherit}
+.sl-refresh-btn:hover{background:rgba(255,255,255,.1)}
+
+/* ═══ CONTROL PANEL ═══ */
+.cp-overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .2s}
+.cp-overlay.open{opacity:1;pointer-events:auto}
+.cp-modal{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--surf);border-radius:var(--radius);box-shadow:var(--shadow-lg);width:min(520px,95vw);max-height:85vh;overflow-y:auto;border:1px solid var(--border)}
+.cp-hdr{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.cp-hdr h2{font-size:16px;font-weight:800;letter-spacing:-.3px}
+.cp-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--txt3);padding:0 4px}
+.cp-close:hover{color:var(--txt)}
+.cp-body{padding:20px 24px}
+.cp-section{margin-bottom:20px}
+.cp-section h3{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--txt3);margin-bottom:10px}
+.cp-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.cp-input{padding:7px 12px;border:1px solid var(--border);border-radius:var(--radius-xs);font-size:12px;font-family:inherit;background:var(--bg2);color:var(--txt);outline:none}
+.cp-input:focus{border-color:var(--accent2)}
+.cp-input[type="date"]{width:140px}
+.cp-select{padding:7px 12px;border:1px solid var(--border);border-radius:var(--radius-xs);font-size:12px;font-family:inherit;background:var(--bg2);color:var(--txt);outline:none}
+.cp-textarea{width:100%;padding:7px 12px;border:1px solid var(--border);border-radius:var(--radius-xs);font-size:12px;font-family:inherit;background:var(--bg2);color:var(--txt);resize:vertical;min-height:36px;outline:none}
+.cp-label{font-size:11px;font-weight:600;color:var(--txt2);min-width:50px}
+.cp-hint{font-size:10px;color:var(--txt3);margin-top:4px}
+.cp-status{padding:8px 12px;border-radius:var(--radius-xs);font-size:11px;margin-top:8px;display:none}
+.cp-status.ok{display:block;background:#16a34a18;color:#16a34a;border:1px solid #16a34a33}
+.cp-status.err{display:block;background:#dc262618;color:#dc2626;border:1px solid #dc262633}
+.cp-status.info{display:block;background:#2563eb18;color:#2563eb;border:1px solid #2563eb33}
+.cp-live{margin-top:12px;border:1px solid var(--border);border-radius:var(--radius-xs);overflow:hidden}
+.cp-live-hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg2);border-bottom:1px solid var(--border);font-size:11px;font-weight:600}
+.cp-live-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.cp-live-dot.running{background:#f59e0b;animation:cp-pulse 1s infinite}
+.cp-live-dot.success{background:#16a34a}
+.cp-live-dot.failure{background:#dc2626}
+.cp-live-dot.queued{background:#6b7280}
+@keyframes cp-pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.cp-live-body{max-height:300px;overflow-y:auto;padding:0}
+.cp-run{padding:10px 12px;border-bottom:1px solid var(--border)}
+.cp-run:last-child{border-bottom:none}
+.cp-run-title{font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px}
+.cp-run-meta{font-size:10px;color:var(--txt3);margin-top:2px}
+.cp-run-steps{margin-top:8px;padding-left:4px}
+.cp-step{display:flex;align-items:center;gap:6px;font-size:11px;padding:3px 0;color:var(--txt2)}
+.cp-step-icon{width:16px;text-align:center;font-size:12px}
+.cp-step.done .cp-step-icon{color:#16a34a}
+.cp-step.fail .cp-step-icon{color:#dc2626}
+.cp-step.run .cp-step-icon{color:#f59e0b}
+.cp-step.skip .cp-step-icon{color:#6b7280}
+.cp-step-dur{margin-left:auto;font-size:10px;color:var(--txt3)}
+.cp-live-footer{padding:6px 12px;font-size:10px;color:var(--txt3);background:var(--bg2);border-top:1px solid var(--border);text-align:center}
+.cp-token-row{display:flex;gap:8px;align-items:center}
+.cp-token-row input{flex:1}
+.cp-saved{font-size:10px;color:var(--green);font-weight:600}
+.cp-btn-row{display:flex;gap:8px;margin-top:10px}
+
+.status-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:var(--radius-xs);border:1px solid var(--border)}
+.status-pill.s-loading{background:var(--bg2);color:var(--txt2)}
+.status-pill.s-done{background:var(--bg2);color:var(--txt)}
+.status-pill.s-errors{background:var(--red-bg);color:var(--red);border-color:var(--red-glow)}
+
+/* ═══════════════════════════════════════════════════════════════
+   CATEGORY TABS — Horizontal pill chips
+   ═══════════════════════════════════════════════════════════════ */
+.cat-bar{padding:0 36px;display:flex;gap:0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.cat-bar::-webkit-scrollbar{display:none}
+.cat-pill{padding:8px 14px;font-size:11.5px;font-weight:500;cursor:pointer;transition:all var(--transition);border:none;border-bottom:2px solid transparent;color:var(--txt3);background:transparent;display:flex;align-items:center;gap:5px;user-select:none;white-space:nowrap;flex-shrink:0}
+.cat-pill:hover{color:var(--txt)}
+.cat-pill.active{color:var(--txt);font-weight:600;border-bottom-color:var(--txt)}
+.cat-pill .cp-dot{display:none}
+.cat-pill .cp-count{font-size:10px;font-weight:600;opacity:.5}
+.cat-pill.active .cp-count{opacity:.8}
+
+/* ═══════════════════════════════════════════════════════════════
+   LIVE STATUS STRIP — Shows each source's progress
+   ═══════════════════════════════════════════════════════════════ */
+.status-strip{padding:6px 36px;display:flex;gap:2px;flex-wrap:wrap;position:relative;z-index:1}
+.ss-dot{width:6px;height:6px;border-radius:1px;transition:all .3s ease;cursor:default;position:relative}
+.ss-dot.ss-idle{background:var(--bg3)}
+.ss-dot.ss-loading{background:var(--txt3);animation:pulse 1.5s ease-in-out infinite}
+.ss-dot.ss-done{background:var(--txt)}
+.ss-dot.ss-error{background:var(--red)}
+.ss-dot[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--surf);color:var(--txt);border:1px solid var(--border);border-radius:var(--radius-xs);padding:4px 8px;font-size:10px;font-weight:500;white-space:nowrap;pointer-events:none;z-index:10}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ═══════════════════════════════════════════════════════════════
+   GRID — single-column list
+   ═══════════════════════════════════════════════════════════════ */
+.main-area{padding:0 36px 40px;position:relative;z-index:1}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:0;border:1px solid var(--border);border-radius:var(--radius);background:var(--surf);overflow:hidden}
+.region-hdr{grid-column:1/-1;padding:14px 20px 10px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.region-hdr .rh-text{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--txt)}
+.region-hdr .rh-count{font-size:10px;font-weight:600;color:var(--txt3);margin-left:auto}
+.region-hdr .rh-stats{display:flex;gap:10px;font-size:10px;font-weight:600}
+.region-hdr .rh-stats .rhs-ok{color:var(--green)}
+.region-hdr .rh-stats .rhs-err{color:var(--red)}
+.region-hdr .rh-stats .rhs-load{color:var(--txt3)}
+.section-label{grid-column:1/-1;display:flex;align-items:center;gap:8px;padding:8px 20px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.section-label .sl-dot{display:none}
+.section-label .sl-text{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--txt2)}
+.section-label .sl-line{flex:1;height:1px;background:var(--border)}
+
+/* ═══════════════════════════════════════════════════════════════
+   CARD — Elevated white cards with soft shadows
+   ═══════════════════════════════════════════════════════════════ */
+.card{background:var(--surf);border-bottom:1px solid var(--border);border-right:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;transition:background .15s ease;position:relative}
+
+/* Status styling — green bg when done, red bg when not */
+.card.card-fetching{background:var(--bg2)}
+.card.card-done{background:var(--green-bg)}
+.card.card-done:hover{background:rgba(22,163,74,.1)}
+.card.card-error{background:var(--red-bg)}
+.card.card-error:hover{background:rgba(220,38,38,.08)}
+.card:not(.card-done):not(.card-error):not(.card-fetching){background:var(--red-bg)}
+.card:not(.card-done):not(.card-error):not(.card-fetching):hover{background:rgba(220,38,38,.08)}
+
+.card-hdr{padding:12px 16px 8px;display:flex;align-items:center;gap:8px;position:relative;z-index:2}
+.card-serial{display:none}
+.card-icon{display:none}
+.card-info{flex:1;min-width:0}
+.card-title{font-size:12.5px;font-weight:600;color:var(--txt)}
+.card-title a{color:inherit;text-decoration:none}
+.card-title a:hover{text-decoration:underline}
+.card-desc{font-size:10px;color:var(--txt3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-status-chip{display:none}
+.card-badge{font-size:12px;font-weight:700;color:var(--txt3);flex-shrink:0;margin-left:auto;min-width:24px;text-align:right;font-variant-numeric:tabular-nums}
+.card-badge.has-docs{color:var(--txt)}
+.card-badge.has-docs{color:var(--txt)}
+
+/* Card status bar at top */
+.card-status-bar{display:none}
+
+.card-body{overflow-y:auto;max-height:320px;flex:1;position:relative;z-index:2}
+.card-body::-webkit-scrollbar{width:3px}
+.card-body::-webkit-scrollbar-track{background:transparent}
+.card-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+.card-foot{padding:6px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--txt3);position:relative;z-index:2;background:var(--bg)}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOC ROW
+   ═══════════════════════════════════════════════════════════════ */
+.doc{padding:8px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:8px;transition:background var(--transition)}
+.doc:last-child{border-bottom:none}
+.doc:hover{background:var(--bg2)}
+.doc-cb{width:13px;height:13px;min-width:13px;margin-top:3px;accent-color:var(--txt);cursor:pointer}
+.doc-body{flex:1;min-width:0}
+.doc-date{font-size:10px;color:var(--txt3);font-weight:500;margin-bottom:2px;font-variant-numeric:tabular-nums}
+.doc-title{font-size:12px;font-weight:500;color:var(--txt);line-height:1.5;word-break:break-word}
+.doc-company{font-size:10.5px;color:var(--txt2);margin-top:1px}
+.doc-actions{display:flex;align-items:center;gap:5px;margin-top:6px;flex-wrap:wrap}
+
+.pdf-link{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;color:var(--txt2);text-decoration:none;padding:3px 8px;border-radius:var(--radius-xs);background:var(--bg2);border:1px solid var(--border);transition:all var(--transition)}
+.pdf-link:hover{background:var(--txt);color:#fff;border-color:var(--txt)}
+
+.dl-btn{padding:3px 8px;border:1px solid var(--border);border-radius:var(--radius-xs);background:var(--surf);cursor:pointer;font-size:10px;font-weight:600;font-family:inherit;color:var(--txt2);transition:all var(--transition)}
+.dl-btn:hover{background:var(--txt);color:#fff;border-color:var(--txt)}
+
+.ds{display:inline-flex;align-items:center;gap:3px;padding:4px 10px;border-radius:var(--radius-xs);font-size:10px;font-weight:600;border:1px solid transparent}
+.ds-q{background:var(--yellow-bg);color:var(--yellow);border-color:rgba(217,119,6,.12)}
+.ds-r{background:var(--blue-bg);color:var(--blue);border-color:rgba(37,99,235,.12)}
+.ds-dl{background:var(--blue-bg);color:var(--blue);border-color:rgba(37,99,235,.12)}
+.ds-ok{background:var(--green-bg);color:var(--green);border-color:rgba(5,150,105,.12)}
+.ds-err{background:var(--red-bg);color:var(--red);border-color:rgba(220,38,38,.12);cursor:pointer}
+.ds-err:hover{background:var(--red);color:#fff}
+
+/* ═══════════════════════════════════════════════════════════════
+   EMPTY & SKELETON
+   ═══════════════════════════════════════════════════════════════ */
+.empty{padding:24px 16px;text-align:center;color:var(--txt3)}
+.empty p{font-size:11.5px;font-weight:400}
+.skel{padding:10px 16px;border-bottom:1px solid var(--border)}
+.skel-bar{height:10px;border-radius:4px;background:linear-gradient(90deg,var(--bg2) 25%,var(--bg3) 50%,var(--bg2) 75%);background-size:200% 100%;animation:shimmer 1.5s ease-in-out infinite;margin-bottom:5px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ═══════════════════════════════════════════════════════════════
+   ACCURACY AUDIT MODAL
+   ═══════════════════════════════════════════════════════════════ */
+.audit-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.audit-overlay.open{opacity:1;pointer-events:all}
+.audit-modal{background:var(--surf);border-radius:var(--radius);border:1px solid var(--border2);box-shadow:var(--shadow-lg);width:min(1100px,96vw);max-height:88vh;display:flex;flex-direction:column;overflow:hidden;transform:translateY(12px);transition:transform .2s}
+.audit-overlay.open .audit-modal{transform:none}
+.audit-hdr{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:10px}
+.audit-hdr h2{font-size:15px;font-weight:800;flex:1}
+.audit-sub{font-size:11px;color:var(--txt3);font-weight:500}
+.audit-close{background:transparent;border:none;cursor:pointer;font-size:18px;color:var(--txt3);width:28px;height:28px;border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;transition:all var(--transition)}
+.audit-close:hover{background:var(--bg3);color:var(--txt)}
+.audit-body{overflow-y:auto;flex:1;padding:20px 24px}
+.audit-body::-webkit-scrollbar{width:4px}.audit-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.audit-loading{padding:48px;text-align:center;color:var(--txt3)}
+.audit-spin{width:32px;height:32px;border:3px solid var(--bg3);border-top-color:var(--txt);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}
+.audit-summary{display:flex;gap:0;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:18px}
+.audit-summary .as-stat{flex:1;padding:14px 10px;text-align:center;border-right:1px solid var(--border)}.audit-summary .as-stat:last-child{border-right:none}
+.as-val{font-size:20px;font-weight:800;line-height:1}
+.as-lbl{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--txt3);margin-top:3px}
+.audit-tbl{width:100%;border-collapse:collapse}
+.audit-tbl th{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--txt3);padding:7px 10px;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap}
+.audit-tbl td{padding:10px 10px;border-bottom:1px solid var(--border);font-size:11.5px;vertical-align:top}
+.audit-tbl tr:hover td{background:var(--bg2)}
+.audit-acc-bar{height:5px;border-radius:3px;background:var(--bg3);overflow:hidden;width:60px;display:inline-block;vertical-align:middle;margin-right:5px}
+.audit-acc-fill{height:100%;border-radius:3px}
+.audit-fail-row{margin-top:5px}
+.audit-fail-item{background:var(--red-bg);border:1px solid rgba(220,38,38,.1);border-radius:var(--radius-xs);padding:5px 8px;margin-top:3px;font-size:10px}
+.audit-fail-item a{color:var(--blue);text-decoration:none;font-size:9.5px;word-break:break-all;display:block;margin-top:2px}
+.audit-fail-item a:hover{text-decoration:underline}
+.audit-empty-note{font-size:10px;color:var(--txt3);padding:10px 0;border-top:1px solid var(--border);margin-top:10px}
+
+/* ═══════════════════════════════════════════════════════════════
+   SPINNER
+   ═══════════════════════════════════════════════════════════════ */
+.spinner-sm{width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--txt);border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOWNLOAD FULL-SCREEN MODAL
+   ═══════════════════════════════════════════════════════════════ */
+/* Full-screen overlay */
+.dl-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:400;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s ease}
+.dl-overlay.open{opacity:1;pointer-events:all}
+/* Modal box */
+.dl-modal{background:var(--surf);border:1px solid var(--border2);border-radius:var(--radius);box-shadow:var(--shadow-lg);width:min(1200px,96vw);height:min(840px,92vh);display:flex;flex-direction:column;overflow:hidden}
+.dl-modal-hdr{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--surf2)}
+.dl-modal-hdr h2{font-size:14px;font-weight:700;color:var(--txt);margin:0}
+.dl-modal-hdr-right{display:flex;align-items:center;gap:10px}
+/* Stats pills row */
+.dl-stats-bar{display:flex;align-items:center;gap:8px;padding:8px 20px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--surf2)}
+.dl-stat-pill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:12px;letter-spacing:.2px}
+.dl-sp-active{background:rgba(37,99,235,.1);color:var(--blue);border:1px solid rgba(37,99,235,.2)}
+.dl-sp-done{background:var(--green-bg);color:var(--green);border:1px solid var(--green-glow)}
+.dl-sp-err{background:var(--red-bg);color:var(--red);border:1px solid var(--red-glow)}
+.dl-sp-label{font-size:10px;color:var(--txt3);font-weight:500}
+/* Modal body: left + right columns */
+.dl-modal-body{display:flex;flex:1;overflow:hidden}
+/* LEFT COLUMN — in-progress */
+.dl-col-left{width:310px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.dl-col-hdr{padding:9px 16px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--txt3);border-bottom:1px solid var(--border);flex-shrink:0;background:var(--surf2)}
+.dl-active-list{overflow-y:auto;flex:1}
+.dl-active-list::-webkit-scrollbar{width:4px}
+.dl-active-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.dli{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:8px}
+.dli:last-child{border-bottom:none}
+.dli-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.dli-dot.d-active{background:var(--blue);animation:dl-pulse 1.2s ease-in-out infinite}
+.dli-dot.d-queue{background:var(--txt3)}
+.dli-dot.d-retry{background:var(--yellow)}
+@keyframes dl-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+.dli-info{flex:1;min-width:0}
+.dli-name{font-size:11px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--txt)}
+.dli-sub{font-size:10px;margin-top:3px;display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.dli-tag{font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px}
+/* RIGHT COLUMN — completed + failed tabs */
+.dl-col-right{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.dl-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--surf2)}
+.dl-tab-btn{padding:10px 20px;font-size:11px;font-weight:600;color:var(--txt3);background:transparent;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .18s;white-space:nowrap}
+.dl-tab-btn.active{color:var(--txt);border-bottom-color:var(--txt);background:var(--surf)}
+.dl-tab-btn:hover:not(.active){color:var(--txt2);background:var(--bg3)}
+.dl-tab-pane{display:none;flex:1;overflow:hidden;flex-direction:column}
+.dl-tab-pane.active{display:flex}
+/* Completed table inside right panel */
+.dl-tbl-wrap{overflow-y:auto;flex:1}
+.dl-tbl-wrap::-webkit-scrollbar{width:4px}
+.dl-tbl-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.dl-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.dl-tbl thead th{padding:8px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);background:var(--surf2);position:sticky;top:0;z-index:1}
+.dl-tbl tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
+.dl-tbl tbody tr:hover{background:var(--bg3)}
+.dl-tbl td{padding:7px 12px;vertical-align:middle;color:var(--txt)}
+.dl-tbl td.td-num{color:var(--txt3);width:36px;text-align:right;font-size:10px}
+.dl-tbl td.td-title{max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+.dl-tbl td.td-src{width:110px}
+.dl-tbl td.td-size{color:var(--txt3);white-space:nowrap;width:70px}
+.dl-tbl td.td-date{color:var(--txt3);white-space:nowrap;width:90px}
+.dl-tbl td.td-links{width:80px}
+.dl-tbl td.td-links a{font-size:10px;color:var(--blue);text-decoration:none;margin-right:6px}
+.dl-tbl td.td-links a:hover{text-decoration:underline}
+/* Failed items in right panel */
+.dl-fail-wrap{overflow-y:auto;flex:1;padding:12px}
+.dl-fail-wrap::-webkit-scrollbar{width:4px}
+.dl-fail-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.dl-fail-item{background:var(--surf2);border:1px solid rgba(220,38,38,.2);border-left:3px solid var(--red);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:10px}
+.dl-fail-item:last-child{margin-bottom:0}
+.dl-fail-name{font-size:11px;font-weight:600;color:var(--txt);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dl-fail-err{font-size:10px;color:var(--red);line-height:1.5;margin-bottom:8px}
+.dl-fail-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.dl-btn-save{font-size:10px;font-weight:600;padding:4px 12px;border-radius:var(--radius-xs);background:var(--txt);color:#fff;border:none;cursor:pointer;white-space:nowrap;transition:opacity .15s}
+.dl-btn-save:hover{opacity:.8}
+.dl-btn-save:disabled{opacity:.4;cursor:default}
+.dl-btn-save.saved{background:var(--green)}
+.dl-btn-open{font-size:10px;font-weight:500;padding:4px 10px;border-radius:var(--radius-xs);background:transparent;color:var(--blue);border:1px solid rgba(37,99,235,.3);cursor:pointer;text-decoration:none;display:inline-block;white-space:nowrap;transition:background .15s}
+.dl-btn-open:hover{background:var(--blue-bg)}
+.dl-empty{padding:36px 16px;text-align:center;color:var(--txt3);font-size:11px}
+/* Close button */
+.dl-modal-close{background:transparent;border:none;cursor:pointer;font-size:20px;color:var(--txt3);width:28px;height:28px;border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;transition:all var(--transition)}
+.dl-modal-close:hover{background:var(--bg3);color:var(--txt)}
+
+/* ═══════════════════════════════════════════════════════════════
+   TOAST
+   ═══════════════════════════════════════════════════════════════ */
+.toast{position:fixed;top:16px;right:16px;background:var(--surf);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 18px;box-shadow:var(--shadow-lg);font-size:12px;font-weight:500;z-index:999;transform:translateX(120%);transition:transform .3s cubic-bezier(.4,0,.2,1);max-width:360px;color:var(--txt)}
+.toast.on{transform:translateX(0)}
+.toast.ok{border-left:3px solid var(--green)}
+.toast.info{border-left:3px solid var(--blue)}
+.toast.warn{border-left:3px solid var(--yellow)}
+.toast.err{border-left:3px solid var(--red)}
+
+/* DL info pill in controls bar */
+.dl-info{font-size:11px;color:var(--txt2);display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:var(--bg2);border-radius:var(--radius-xs);border:1px solid var(--border)}
+.dl-toggle{display:none;cursor:pointer;font-size:11px;font-weight:600;color:var(--txt2);padding:4px 10px;background:var(--bg2);border-radius:var(--radius-xs);border:1px solid var(--border)}
+.dl-toggle:hover{color:var(--txt);background:var(--bg3)}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+@media(max-width:768px){
+  .hero,.controls,.cat-bar,.status-strip,.main-area{padding-left:16px;padding-right:16px}
+  .hero-stats{gap:10px}
+  .hero-stat .hs-val{font-size:16px}
+  .ctrl-search{width:140px}
+  .ctrl-input[type="date"]{width:110px}
+  .card-hdr{padding:10px 14px 8px}
+}
+@media(min-width:769px) and (max-width:1100px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+  <div class="hero-top">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 7h-4V5c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 5h4v2h-4V5zm10 14H4V9h16v10z"/></svg>
+      </div>
+      <div>
+        <h1>Lucio AI Briefcase Repositories Automation Machine</h1>
+        <p>Built By Mohit Sharma</p>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat stat-ok"><div class="hs-val" id="stat-sources">0</div><div class="hs-label">Sources</div></div>
+      <div class="hero-stat"><div class="hs-val" id="stat-docs">0</div><div class="hs-label">Documents</div></div>
+      <div class="hero-stat stat-load"><div class="hs-val" id="stat-loading">0</div><div class="hs-label">Loading</div></div>
+      <div class="hero-stat stat-err"><div class="hs-val" id="stat-errors">0</div><div class="hs-label">Errors</div></div>
+    </div>
+  </div>
+  <div class="global-progress"><div class="global-progress-bar" id="gp-bar" style="width:0%"></div></div>
+  <div class="progress-label"><span id="gp-left">Starting up...</span><span id="gp-right"></span></div>
+</header>
+
+<!-- ═══ NAVIGATION ═══ -->
+<div class="sticky-nav">
+<div class="controls">
+  <input type="date" class="ctrl-input" id="date-from" onchange="onFilterChange()">
+  <span style="color:var(--txt3);font-size:10px;font-weight:500">to</span>
+  <input type="date" class="ctrl-input" id="date-to" onchange="onFilterChange()">
+  <div class="ctrl-sep"></div>
+  <input type="text" class="ctrl-input ctrl-search" id="search" placeholder="Search documents..." oninput="onFilterChange()">
+  <div class="ctrl-actions">
+    <button class="btn btn-ghost" onclick="resetFilters()">Reset</button>
+    <button class="btn btn-primary" id="refresh-btn" onclick="refreshAll()">Refresh</button>
+    <button class="btn btn-green" onclick="downloadAll()">Download All</button>
+    <button class="btn" onclick="retryErrors()">Retry</button>
+    <button class="btn" id="audit-btn" onclick="runAudit()" title="Verify all scraped PDF links are accessible">Audit</button>
+    <button class="btn btn-primary" onclick="openScrapeLog()" title="View detailed scrape results, failed sources, all documents">📊 Scrape Log</button>
+    <button class="btn btn-primary" onclick="openControlPanel()" title="Remote control: change dates, trigger scrapes, post notices">⚙ Control</button>
+  </div>
+  <span class="status-pill" id="h-status" style="display:none"></span>
+  <div class="dl-info" id="dl-summary" style="display:none"><span class="spinner-sm"></span> <span id="dl-sm-txt"></span></div>
+  <div class="dl-toggle" id="dlp-toggle" onclick="openDlModal()">Downloads <b id="dlp-cnt">0</b></div>
+</div>
+<!-- ═══ CATEGORY PILLS ═══ -->
+<div class="cat-bar" id="cat-bar"></div>
+</div>
+
+<!-- ═══ STATUS STRIP — one dot per source ═══ -->
+<div class="status-strip" id="status-strip"></div>
+
+<!-- ═══ GRID ═══ -->
+<div class="main-area"><div class="grid" id="grid"></div></div>
+
+<!-- ═══ DOWNLOAD FULL-SCREEN MODAL ═══ -->
+<div class="dl-overlay" id="dl-overlay" onclick="if(event.target===this)closeDlModal()">
+  <div class="dl-modal">
+    <!-- Header -->
+    <div class="dl-modal-hdr">
+      <h2>📥 Downloads</h2>
+      <div class="dl-modal-hdr-right">
+        <div class="dl-stats-bar" id="dl-stats-bar" style="border:none;padding:0;background:none">
+          <span class="dl-stat-pill dl-sp-active"><span id="dls-active">0</span> active</span>
+          <span class="dl-stat-pill dl-sp-done"><span id="dls-done">0</span> done</span>
+          <span class="dl-stat-pill dl-sp-err"><span id="dls-err">0</span> failed</span>
+          <span class="dl-sp-label">→ Desktop/Repositories/</span>
+        </div>
+        <button class="btn" style="font-size:10px;padding:4px 10px" onclick="retryErrors()">Retry All Errors</button>
+        <button class="dl-modal-close" onclick="closeDlModal()">&#215;</button>
+      </div>
+    </div>
+    <!-- Body -->
+    <div class="dl-modal-body">
+      <!-- LEFT: In-progress -->
+      <div class="dl-col-left">
+        <div class="dl-col-hdr">⟳ In Progress</div>
+        <div class="dl-active-list" id="dl-active-list">
+          <div class="dl-empty">No active downloads</div>
+        </div>
+      </div>
+      <!-- RIGHT: Completed / Failed tabs -->
+      <div class="dl-col-right">
+        <div class="dl-tabs">
+          <button class="dl-tab-btn active" id="dtab-done-btn" onclick="switchDlTab('done')">✔ Completed <span id="dtab-done-cnt" style="opacity:.6"></span></button>
+          <button class="dl-tab-btn" id="dtab-fail-btn" onclick="switchDlTab('fail')">✕ Failed <span id="dtab-fail-cnt" style="opacity:.6"></span></button>
+        </div>
+        <!-- Completed tab -->
+        <div class="dl-tab-pane active" id="dtab-done">
+          <div class="dl-tbl-wrap">
+            <table class="dl-tbl">
+              <thead><tr><th class="td-num">#</th><th>Title</th><th>Source</th><th>Size</th><th>Date</th><th>Links</th></tr></thead>
+              <tbody id="dl-done-tbody"><tr><td colspan="6" class="dl-empty">No completed downloads yet</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Failed tab -->
+        <div class="dl-tab-pane" id="dtab-fail">
+          <div class="dl-fail-wrap" id="dl-fail-list">
+            <div class="dl-empty">No failed downloads 🎉</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- ═══ ACCURACY AUDIT MODAL ═══ -->
+
+<!-- ═══ CONTROL PANEL MODAL ═══ -->
+<div class="cp-overlay" id="cp-overlay" onclick="if(event.target===this)closeControlPanel()">
+  <div class="cp-modal">
+    <div class="cp-hdr">
+      <h2>⚙ Remote Control</h2>
+      <button class="cp-close" onclick="closeControlPanel()">&#215;</button>
+    </div>
+    <div class="cp-body">
+      <!-- GitHub Token -->
+      <div class="cp-section">
+        <h3>🔑 GitHub Token (one-time setup)</h3>
+        <div class="cp-token-row">
+          <input type="password" class="cp-input" id="cp-token" placeholder="ghp_xxxxxxxxxxxx" style="flex:1">
+          <button class="btn" onclick="saveToken()">Save</button>
+        </div>
+        <div class="cp-hint" id="cp-token-hint">Enter a GitHub Personal Access Token with <b>repo</b> + <b>workflow</b> scope. <span id="cp-token-status"></span></div>
+      </div>
+
+      <!-- Scrape with Date Range -->
+      <div class="cp-section">
+        <h3>📅 Scrape with Custom Dates</h3>
+        <div class="cp-row">
+          <span class="cp-label">From</span>
+          <input type="date" class="cp-input" id="cp-date-from">
+          <span class="cp-label" style="min-width:20px;text-align:center">to</span>
+          <input type="date" class="cp-input" id="cp-date-to">
+        </div>
+        <div class="cp-btn-row">
+          <button class="btn btn-primary" onclick="cpScrapeAll()">Scrape All Sources</button>
+          <button class="btn" onclick="cpScrapeMonth()">Current Month</button>
+        </div>
+        <div class="cp-hint">Date range updates the website data. Scrape takes ~10 minutes.</div>
+      </div>
+
+      <!-- Scrape Specific Sources -->
+      <div class="cp-section">
+        <h3>🎯 Scrape Specific Sources</h3>
+        <div class="cp-row">
+          <input type="text" class="cp-input" id="cp-sources" placeholder="RHP,DRHP,CCI_GREEN,SEBI_CIRCULARS" style="flex:1">
+        </div>
+        <div class="cp-btn-row">
+          <button class="btn btn-primary" onclick="cpScrapeSelected()">Scrape Selected</button>
+        </div>
+        <div class="cp-hint">Comma-separated source keys. Only re-scrapes those sources, keeps rest unchanged.</div>
+      </div>
+
+      <!-- Post Notice -->
+      <div class="cp-section">
+        <h3>📢 Post Notice Banner</h3>
+        <div class="cp-row">
+          <input type="text" class="cp-input" id="cp-notice-msg" placeholder="Your notice message..." style="flex:1">
+          <select class="cp-select" id="cp-notice-type">
+            <option value="info">ℹ Info</option>
+            <option value="warning">⚠ Warning</option>
+            <option value="success">✅ Success</option>
+          </select>
+        </div>
+        <div class="cp-btn-row">
+          <button class="btn btn-primary" onclick="cpPostNotice()">Post Notice</button>
+          <button class="btn" onclick="cpClearNotice()">Clear Notice</button>
+        </div>
+      </div>
+
+      <!-- Live Progress -->
+      <div class="cp-section">
+        <h3>📊 Live Progress</h3>
+        <div class="cp-btn-row">
+          <button class="btn btn-primary" id="cp-poll-btn" onclick="cpTogglePoll()">▶ Start Monitoring</button>
+          <button class="btn" onclick="cpCheckOnce()">Check Once</button>
+        </div>
+        <div class="cp-status" id="cp-status"></div>
+        <div class="cp-live" id="cp-live" style="display:none">
+          <div class="cp-live-hdr">
+            <span><span class="cp-live-dot" id="cp-live-dot"></span><span id="cp-live-label">Workflow Runs</span></span>
+            <span id="cp-live-ts"></span>
+          </div>
+          <div class="cp-live-body" id="cp-live-body"></div>
+          <div class="cp-live-footer" id="cp-live-footer">Auto-refreshes every 5 seconds while monitoring</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCRAPE LOG DASHBOARD ═══ -->
+<div class="sl-overlay" id="sl-overlay" onclick="if(event.target===this)closeScrapeLog()">
+  <div class="sl-modal">
+    <div class="sl-hdr">
+      <h2>📊 Scrape Log — Real-Time Evidence</h2>
+      <button class="sl-close" onclick="closeScrapeLog()">&#215;</button>
+    </div>
+    <div class="sl-live-strip" id="sl-live-strip">
+      <span class="sl-live-dot" id="sl-live-dot"></span>
+      <span id="sl-live-msg">Loading scrape log...</span>
+      <button class="sl-refresh-btn" onclick="loadScrapeLog()">↻ Refresh</button>
+    </div>
+    <div class="sl-stats" id="sl-stats"></div>
+    <div class="sl-toolbar" id="sl-toolbar">
+      <button class="sl-filter-btn active" data-filter="all" onclick="slFilter('all',this)">All</button>
+      <button class="sl-filter-btn" data-filter="ok" onclick="slFilter('ok',this)">✓ With Docs</button>
+      <button class="sl-filter-btn" data-filter="error" onclick="slFilter('error',this)">✗ Errors</button>
+      <button class="sl-filter-btn" data-filter="empty" onclick="slFilter('empty',this)">○ Empty</button>
+      <button class="sl-filter-btn" data-filter="no_pdf" onclick="slFilter('no_pdf',this)">📄 No PDF</button>
+      <input type="text" class="sl-search" id="sl-search" placeholder="Search sources or documents..." oninput="slRender()">
+    </div>
+    <div class="sl-body" id="sl-body">
+      <div class="sl-no-data" id="sl-no-data">
+        <div class="sl-no-data-icon">📋</div>
+        <p>No scrape log available yet</p>
+        <p class="sl-hint">Trigger a scrape from the Control Panel, or wait for the next scheduled run.</p>
+      </div>
+    </div>
+    <div class="sl-footer" id="sl-footer">
+      <span id="sl-footer-left">—</span>
+      <span id="sl-footer-right">—</span>
+    </div>
+  </div>
+</div>
+
+<div class="audit-overlay" id="audit-overlay" onclick="if(event.target===this)closeAudit()">
+  <div class="audit-modal">
+    <div class="audit-hdr">
+      <h2>Accuracy Audit</h2>
+      <span class="audit-sub" id="audit-sub">Verifying PDF links for all sources</span>
+      <button class="audit-close" onclick="closeAudit()">&#215;</button>
+    </div>
+    <div class="audit-body" id="audit-body">
+      <div class="audit-loading"><div class="audit-spin"></div><p style="font-weight:500">Checking documents...</p><p style="font-size:10px;margin-top:4px">This takes 30–90 seconds</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- For hidden compat refs -->
+<span id="h-sources" style="display:none">0</span>
+<span id="h-docs" style="display:none">0</span>
+
+<script>
+// =================================================================
+//  CONFIG
+// =================================================================
+const CATS = {
+  SEBI:  { color:'#6c5ce7', label:'SEBI', region:'national' },
+  BSE:   { color:'#10b981', label:'BSE', region:'national' },
+  CCI:   { color:'#a78bfa', label:'CCI', region:'national' },
+  RBI:   { color:'#f43f5e', label:'RBI', region:'national' },
+  IRDAI: { color:'#fbbf24', label:'IRDAI', region:'national' },
+  INX:   { color:'#06b6d4', label:'India INX', region:'national' },
+  RERA:  { color:'#ec4899', label:'RERA', region:'national' },
+  TRAI:    { color:'#818cf8', label:'TRAI', region:'national' },
+  GST:     { color:'#14b8a6', label:'GST', region:'national' },
+  IBBI:    { color:'#f97316', label:'IBBI/NCLT', region:'national' },
+  EU_COMP: { color:'#003399', label:'EU Competition', region:'international' },
+  EPO_BOA: { color:'#0070c0', label:'EPO', region:'international' },
+  EDPB:    { color:'#004494', label:'GDPR (EDPB)', region:'international' },
+  UAE:     { color:'#00732f', label:'UAE', region:'international' },
+  UK:      { color:'#1d4ed8', label:'UK Tribunals', region:'international' },
+};
+
+const SRC = {
+  RHP:             { label:'SEBI RHP',            desc:'Red Herring Prospectus',           cat:'SEBI',  url:'https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=3&ssid=15&smid=11' },
+  DRHP:            { label:'SEBI DRHP',           desc:'Draft Red Herring Prospectus',     cat:'SEBI',  url:'https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=3&ssid=15&smid=10' },
+  RIGHTS_LOF:      { label:'Rights LoF',          desc:'Rights Issue Final LoFs',          cat:'SEBI',  url:'https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=3&ssid=16&smid=14' },
+  INVIT_RI_FINAL:  { label:'InvIT RI Final',      desc:'Rights Issue Final Offer',         cat:'SEBI',  url:'https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=3&ssid=89&smid=124' },
+  INVIT_RI_DRAFT:  { label:'InvIT RI Draft',      desc:'Rights Issue Draft Offer',         cat:'SEBI',  url:'https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=3&ssid=89&smid=127' },
+  INVIT_PUB_FINAL: { label:'InvIT Pub Final',     desc:'Public Issue Final Offer',         cat:'SEBI',  url:'https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=3&ssid=55&smid=73' },
+  INVIT_PUB_DRAFT: { label:'InvIT Pub Draft',     desc:'Public Issue Draft Offer',         cat:'SEBI',  url:'https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=3&ssid=55&smid=66' },
+  INVIT_PVT_FINAL: { label:'InvIT Pvt Final',     desc:'Private Issue Final Offer',        cat:'SEBI',  url:'https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=3&ssid=73&smid=76' },
+  INVIT_PVT_DRAFT: { label:'InvIT Pvt Draft',     desc:'Private Issue Draft Offer',        cat:'SEBI',  url:'https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=3&ssid=73&smid=121' },
+  REIT_FINAL:      { label:'REIT Final',          desc:'Final Offer Document',             cat:'SEBI',  url:'https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=3&ssid=74&smid=83' },
+  REIT_DRAFT:      { label:'REIT Draft',          desc:'Draft Offer Document',             cat:'SEBI',  url:'https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=3&ssid=74&smid=80' },
+  SEBI_INFORMAL:   { label:'Informal Guidance',   desc:'Informal Guidance Letters',        cat:'SEBI',  url:'https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=2&ssid=10&smid=0' },
+  SEBI_CONSULT:    { label:'Consultation',        desc:'Consultation Papers',              cat:'SEBI',  url:'https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=4&ssid=38&smid=35' },
+  SEBI_CIRCULARS:  { label:'SEBI Circulars',     desc:'SEBI Circulars',                   cat:'SEBI',  url:'https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=1&ssid=7&smid=0' },
+  SEBI_FINAL_OFFER:{ label:'Final Offer Docs',   desc:'Public Issues Final Offer Documents', cat:'SEBI', url:'https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=3&ssid=15&smid=12' },
+  SEBI_LODR:       { label:'SEBI LODR',          desc:'Listing Obligations & Disclosure Requirements Regulations', cat:'SEBI', url:'https://www.sebi.gov.in/legal/regulations/feb-2023/securities-and-exchange-board-of-india-listing-obligations-and-disclosure-requirements-regulations-2015-last-amended-on-february-07-2023-_69224.html' },
+  SEBI_ICDR:       { label:'SEBI ICDR',          desc:'Issue of Capital & Disclosure Requirements Regulations', cat:'SEBI', url:'https://www.sebi.gov.in/legal/regulations/may-2024/securities-and-exchange-board-of-india-issue-of-capital-and-disclosure-requirements-regulations-2018-last-amended-on-may-17-2024-_80421.html' },
+  SEBI_TAKEOVER:   { label:'SEBI Takeover',      desc:'Substantial Acquisition of Shares & Takeovers Regulations', cat:'SEBI', url:'https://www.sebi.gov.in/legal/regulations/may-2024/securities-and-exchange-board-of-india-substantial-acquisition-of-shares-and-takeovers-regulations-2011-last-amended-on-may-17-2024-_69218.html' },
+  SEBI_AIF:        { label:'SEBI AIF',           desc:'Alternative Investment Funds Regulations', cat:'SEBI', url:'https://www.sebi.gov.in/legal/regulations/aug-2024/securities-and-exchange-board-of-india-alternative-investment-funds-regulations-2012-last-amended-on-august-06-2024-_85618.html' },
+  BSE_PLACEMENT:   { label:'BSE Placement',       desc:'QIP Placement Document',           cat:'BSE',   url:'https://www.bseindia.com/corporates/qip.aspx' },
+  BSE_PRELIMINARY: { label:'BSE Preliminary',     desc:'Draft / Preliminary Placement',    cat:'BSE',   url:'https://www.bseindia.com/corporates/qip.aspx' },
+  CCI_FORM1:       { label:'CCI Form I',          desc:'Combination Orders s.31',          cat:'CCI',   url:'https://www.cci.gov.in/combination/orders-section31' },
+  CCI_FORM2:       { label:'CCI Form II',         desc:'Combination Orders s.31',          cat:'CCI',   url:'https://www.cci.gov.in/combination/orders-section31' },
+  CCI_FORM3:       { label:'CCI Form III',        desc:'Combination Orders s.31',          cat:'CCI',   url:'https://www.cci.gov.in/combination/orders-section31' },
+  CCI_GUN_JUMPING: { label:'Gun Jumping',         desc:'Orders s.43A & 44',               cat:'CCI',   url:'https://www.cci.gov.in/combination/orders-section43a_44' },
+  CCI_APPROVED_MOD:{ label:'Approved w/ Mod',     desc:'Approved with Modifications',      cat:'CCI',   url:'https://www.cci.gov.in/combination/cases-approved-with-modification' },
+  CCI_ANTI_S26_1:  { label:'CCI S26(1)',          desc:'Antitrust Orders',                 cat:'CCI',   url:'https://www.cci.gov.in/antitrust/orders/list' },
+  CCI_ANTI_S26_2:  { label:'CCI S26(2)',          desc:'Antitrust Orders',                 cat:'CCI',   url:'https://www.cci.gov.in/antitrust/orders/list' },
+  CCI_ANTI_S26_6:  { label:'CCI S26(6)',          desc:'Antitrust Orders',                 cat:'CCI',   url:'https://www.cci.gov.in/antitrust/orders/list' },
+  CCI_ANTI_S26_7:  { label:'CCI S26(7)',          desc:'Antitrust Orders',                 cat:'CCI',   url:'https://www.cci.gov.in/antitrust/orders/list' },
+  CCI_ANTI_S27:    { label:'CCI S27',             desc:'Antitrust Orders',                 cat:'CCI',   url:'https://www.cci.gov.in/antitrust/orders/list' },
+  CCI_ANTI_S33:    { label:'CCI S33',             desc:'Antitrust Orders',                 cat:'CCI',   url:'https://www.cci.gov.in/antitrust/orders/list' },
+  CCI_ANTI_OTHER:  { label:'CCI Other',           desc:'Other Antitrust Orders',           cat:'CCI',   url:'https://www.cci.gov.in/antitrust/orders/list' },
+  CCI_GREEN:       { label:'Green Channel',       desc:'Green Channel Notices',            cat:'CCI',   url:'https://www.cci.gov.in/combination/green-channel' },
+  RBI_MD:          { label:'Master Directions',   desc:'RBI Master Directions',            cat:'RBI',   url:'https://rbi.org.in/scripts/bs_viewmasterdirections.aspx' },
+  RBI_MC:          { label:'Master Circulars',    desc:'RBI Master Circulars',             cat:'RBI',   url:'https://rbi.org.in/Scripts/BS_ViewMasterCirculardetails.aspx' },
+  RBI_MD_COMM:     { label:'MD Comm Banks',       desc:'Commercial Banks',                 cat:'RBI',   url:'https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx?did=403' },
+  RBI_MD_SFB:      { label:'MD SFBs',             desc:'Small Finance Banks',              cat:'RBI',   url:'https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx?did=404' },
+  RBI_MD_PAY:      { label:'MD Pay Banks',        desc:'Payments Banks',                   cat:'RBI',   url:'https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx?did=405' },
+  RBI_MD_LAB:      { label:'MD Local Area',       desc:'Local Area Banks',                 cat:'RBI',   url:'https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx?did=406' },
+  RBI_MD_RRB:      { label:'MD RRBs',             desc:'Regional Rural Banks',             cat:'RBI',   url:'https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx?did=407' },
+  RBI_MD_UCB:      { label:'MD UCBs',             desc:'Urban Co-operative Banks',         cat:'RBI',   url:'https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx?did=408' },
+  RBI_MD_RCB:      { label:'MD RCBs',             desc:'Rural Co-operative Banks',         cat:'RBI',   url:'https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx?did=409' },
+  RBI_MD_AIFI:     { label:'MD AIFIs',            desc:'All India Financial Institutions',  cat:'RBI',   url:'https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx?did=410' },
+  RBI_MD_NBFC:     { label:'MD NBFCs',            desc:'Non-Banking Fin. Companies',       cat:'RBI',   url:'https://www.rbi.org.in/Scripts/BS_ViewMasterDirections.aspx?did=411' },
+  RBI_FEMA_DIR:    { label:'FEMA Directions',    desc:'FEMA Master Directions',           cat:'RBI',   url:'https://www.rbi.org.in/scripts/FS_Notification.aspx?fn=5&fnn=2764' },
+  RBI_FEMA_CIRC:   { label:'FEMA Circulars',     desc:'FEMA Master Circulars',            cat:'RBI',   url:'https://www.rbi.org.in/scripts/FS_Notification.aspx?fn=5&fnn=2763' },
+  RBI_FEMA_NOTIF:  { label:'FEMA Notifications', desc:'FEMA/FDI All Notifications',       cat:'RBI',   url:'https://www.rbi.org.in/scripts/FS_Notification.aspx?fn=5' },
+  IRDAI_CIRC:      { label:'IRDAI Circulars',     desc:'Master Circulars',                 cat:'IRDAI', url:'https://irdai.gov.in/circulars' },
+  IRDAI_REGS:      { label:'IRDAI Regulations',   desc:'Gazette Notified Regulations',     cat:'IRDAI', url:'https://irdai.gov.in/consolidated-gazette-notified-regulations' },
+  INX_CIRC:        { label:'INX Circulars',       desc:'Circulars & Notices',              cat:'INX',   url:'https://www.indiainx.com/markets/CircularsLR.aspx' },
+  INX_ISSUER:      { label:'INX Issuer Docs',     desc:'Issuer Documents',                 cat:'INX',   url:'https://www.indiainx.com/static/issuer_details.aspx' },
+  TG_RERA_ADJ:     { label:'TG Adjudication',     desc:'Adjudicating Officer Orders',      cat:'RERA',  url:'https://rera.telangana.gov.in' },
+  TG_RERA_AUTH:    { label:'TG Authority',        desc:'Authority Orders',                 cat:'RERA',  url:'https://rera.telangana.gov.in' },
+  TG_RERA_SUO:     { label:'TG Suo Motu',         desc:'Suo Motu Orders',                  cat:'RERA',  url:'https://rera.telangana.gov.in' },
+  TG_RERA_CIRC:    { label:'TG Circulars',        desc:'Telangana RERA Circulars',         cat:'RERA',  url:'https://rera.telangana.gov.in' },
+  TN_RERA:         { label:'TN RERA Orders',      desc:'Tamil Nadu RERA Final Orders',     cat:'RERA',  url:'https://rera.tn.gov.in' },
+  DTCP_KA:         { label:'DTCP Karnataka',      desc:'Town & Country Planning Circulars', cat:'RERA', url:'http://www.dtcp.gov.in/en/circulars' },
+  MAHA_RERA:       { label:'MahaRERA',            desc:'Maharashtra RERA Circulars',       cat:'RERA',  url:'https://maharera.maharashtra.gov.in/circular' },
+  KA_REAT:         { label:'K-REAT Orders',       desc:'Karnataka REAT Judgments',         cat:'RERA',  url:'https://rera.karnataka.gov.in/tribunalDisposedList' },
+  KA_RERA:         { label:'K-RERA Orders',       desc:'Karnataka RERA Judgments',         cat:'RERA',  url:'https://rera.karnataka.gov.in/tribunalDisposedList' },
+  HR_REAT:         { label:'HR REAT',             desc:'Haryana REAT Rulings',             cat:'RERA',  url:'https://haryanarera.gov.in/admincontrol/judgements/3' },
+  DL_REAT:         { label:'DL REAT',             desc:'Delhi REAT Orders',                cat:'RERA',  url:'https://www.rera.delhi.gov.in/reat_cases_orders' },
+  TRAI_DIR:        { label:'Directions',          desc:'TRAI Directions',                  cat:'TRAI',  url:'https://www.trai.gov.in/release-publication/directions' },
+  TRAI_REG:        { label:'Regulations',         desc:'TRAI Regulations',                 cat:'TRAI',  url:'https://www.trai.gov.in/release-publication/regulations' },
+  TRAI_REC:        { label:'Recommendations',     desc:'TRAI Recommendations',             cat:'TRAI',  url:'https://www.trai.gov.in/release-publication/recommendation' },
+  TRAI_CON:        { label:'Consultation',        desc:'TRAI Consultation Papers',         cat:'TRAI',  url:'https://www.trai.gov.in/release-publication/consultation' },
+  CGST_CIRC:       { label:'CGST Circulars',      desc:'CGST Circulars from GST Council',  cat:'GST',   url:'https://gstcouncil.gov.in/cgst-circulars' },
+  IBBI_RES:        { label:'IBBI Resolution',     desc:'NCLT Resolution Plan Orders',      cat:'IBBI',    url:'https://ibbi.gov.in/orders/nclt?title=Resolution' },
+  IBBI_ADM:        { label:'IBBI Admission',      desc:'NCLT Admission Orders',            cat:'IBBI',    url:'https://ibbi.gov.in/orders/nclt?title=Admission' },
+  EU_MERGER:       { label:'EU Mergers (2004)',   desc:'EC Reg.139/2004 Decisions',        cat:'EU_COMP', url:'https://competition-cases.ec.europa.eu/search?caseInstrument=M&sortField=caseLastDecisionDate&sortOrder=DESC' },
+  EU_ANTITRUST:    { label:'EU Antitrust & Cartels', desc:'Antitrust & Cartel Decisions',  cat:'EU_COMP', url:'https://competition-cases.ec.europa.eu/search?caseInstrument=AT&pageSize=50&sortField=caseLastDecisionDate&sortOrder=DESC' },
+  EU_DMA:          { label:'EU DMA',              desc:'Digital Markets Act Decisions',    cat:'EU_COMP', url:'https://competition-cases.ec.europa.eu/search?caseInstrument=InstrumentDMA&pageSize=50&sortField=caseLastDecisionDate&sortOrder=DESC' },
+  EU_FS:           { label:'EU Foreign Subsidies', desc:'Foreign Subsidies Decisions',     cat:'EU_COMP', url:'https://competition-cases.ec.europa.eu/search?caseInstrument=InstrumentFS&pageSize=50&sortField=caseLastDecisionDate&sortOrder=DESC' },
+  EPO_BOA:         { label:'EPO BoA Decisions',   desc:'Board of Appeal Decisions (2026)', cat:'EPO_BOA', url:'https://www.epo.org/en/case-law-appeals/decisions/recent?year=2026&items_per_page=100&page=0' },
+  EDPB_GUIDELINES:  { label:'GDPR Guidelines',       desc:'Guidelines, Recommendations & Best Practices', cat:'EDPB', url:'https://www.edpb.europa.eu/our-work-tools/general-guidance/guidelines-recommendations-best-practices_en' },
+  EDPB_BINDING:     { label:'Binding Decisions',     desc:'GDPR Art.65 Binding Decisions (all time)',      cat:'EDPB', url:'https://www.edpb.europa.eu/our-work-tools/consistency-findings/binding-decisions_en' },
+  EDPB_OPINIONS:    { label:'GDPR Opinions',         desc:'Consistency Findings – Opinions',               cat:'EDPB', url:'https://www.edpb.europa.eu/our-work-tools/consistency-findings/opinions_en' },
+  ADGM_ORDERS:      { label:'ADGM Judgments',        desc:'Abu Dhabi Global Market Courts Judgments',      cat:'UAE',  url:'https://www.adgm.com/adgm-courts/judgments' },
+  DIFC_CA_ORDERS:   { label:'DIFC Court of Appeal',  desc:'DIFC Court of Appeal Judgments & Orders',       cat:'UAE',  url:'https://www.difccourts.ae/rules-decisions/judgments-orders/court-appeal' },
+  MOHRE_LAWS:       { label:'MOHRE Laws',            desc:'UAE Labour Laws & Regulations',                 cat:'UAE',  url:'https://www.mohre.gov.ae/en/laws-and-regulations/laws' },
+  MOHRE_RESOLUTIONS:{ label:'MOHRE Resolutions',     desc:'UAE Ministry Resolutions & Circulars',          cat:'UAE',  url:'https://www.mohre.gov.ae/en/laws-and-regulations/resolutions-and-circulars' },
+    // UK Tribunal & Competition Sources
+    UK_ET_ENG:       { label:'Employment Tribunal (England)', desc:'Employment Tribunal Decisions - England (Unfair Dismissal)', cat:'UK', url:'https://www.gov.uk/employment-tribunal-decisions?tribunal_decision_country%5B%5D=england-and-wales&tribunal_decision_categories%5B%5D=unfair-dismissal&tribunal_decision_decision_date%5Bfrom%5D=01/01/2026' },
+    UK_AAC:          { label:'Admin Appeals Chamber', desc:'UK Administrative Appeals Chamber (Upper Tribunal)', cat:'UK', url:'https://www.gov.uk/administrative-appeals-tribunal-decisions?tribunal_decision_decision_date%5Bfrom%5D=01/01/2026' },
+    UK_CAT:          { label:'UK CAT Judgments',      desc:'UK Competition Appeal Tribunal Judgments', cat:'UK', url:'https://www.catribunal.org.uk/judgments?query=&neutral_citation_year=2026&neutral_citation_number=' },
+    UK_CMA_MERGERS:  { label:'UK CMA Mergers',        desc:'UK CMA Mergers', cat:'UK', url:'https://www.gov.uk/cma-cases?case_type%5B%5D=mergers&closed_date%5Bfrom%5D=01/01/2026' },
+    UK_CMA_NONMERGER:{ label:'UK CMA Non-Merger',     desc:'UK CMA Non-Merger Orders', cat:'UK', url:'https://www.gov.uk/cma-cases?case_type%5B%5D=ca98-and-civil-cartels&case_type%5B%5D=competition-disqualification&case_type%5B%5D=consumer-enforcement&case_type%5B%5D=criminal-cartels&case_type%5B%5D=digital-markets-unit&case_type%5B%5D=information-and-advice-to-government&case_type%5B%5D=markets&case_type%5B%5D=oim-project&case_type%5B%5D=regulatory-references-and-appeals&case_type%5B%5D=review-of-orders-and-undertakings&case_type%5B%5D=sau-referral&closed_date%5Bfrom%5D=01/01/2026' },
+    UK_EAT:          { label:'Employment Appeal Tribunal', desc:'UK Employment Appeal Tribunal Decisions', cat:'UK', url:'https://www.gov.uk/employment-appeal-tribunal-decisions?tribunal_decision_decision_date%5Bfrom%5D=01/01/2026' },
+    UK_ET_SCOT:      { label:'Employment Tribunal (Scotland)', desc:'UK Employment Tribunal Decisions (Scotland)', cat:'UK', url:'https://www.gov.uk/employment-tribunal-decisions?tribunal_decision_country%5B%5D=scotland&tribunal_decision_decision_date%5Bfrom%5D=01/01/2026' },
+    UK_UTIAC:        { label:'Immigration & Asylum Chamber', desc:'UK Immigration and Asylum Chamber Decisions (Upper Tribunal)', cat:'UK', url:'https://tribunalsdecisions.service.gov.uk/utiac?utf8=%E2%9C%93&search%5Bquery%5D=&search%5Breported%5D=true&search%5Bcountry%5D=&search%5Bcountry_guideline%5D=0&search%5Bjudge%5D=&search%5Bclaimant%5D=' },
+    UK_LAND:         { label:'Land Chamber (Upper Tribunal)', desc:'UK Land Chambers (Upper Tribunal)', cat:'UK', url:'https://caselaw.nationalarchives.gov.uk/search?tribunal=ukut/lc' },
+    UK_TAX_CHANCERY: { label:'Tax & Chancery Tribunal', desc:'UK Tax and Chancery Tribunal Decisions (Upper Tribunal)', cat:'UK', url:'https://www.gov.uk/tax-and-chancery-tribunal-decisions' },
+    UK_TAX_FTT:      { label:'Tax Chamber (First-tier)', desc:'UK Tax Chamber (First-tier Tribunal)', cat:'UK', url:'https://caselaw.nationalarchives.gov.uk/search?query=&court=ukftt/tc&judge=&party=&order=-date&page=' },
+};
+
+let ALL_KEYS = Object.keys(SRC);
+let TOTAL_SOURCES = ALL_KEYS.length;
+const API = ''; // unused in static mode
+let _scrapedData = null; // loaded from data.json
+
+// =================================================================
+//  STATE
+// =================================================================
+let unified = {}, filtered = {}, selMap = {}, dlProg = {};
+let activeCat = 'ALL', statusTimer = null, dlTimer = null;
+let _loading = false;
+let _lastFetchedSet = '';
+let _srcStatus = {};  // live status per source
+let HIDDEN_KEYS = new Set();  // sources hidden from the demo (errored in this snapshot)
+let activeRange  = { from_iso:'', to_iso:'', is_custom: false };
+for (const k of ALL_KEYS) { unified[k]=[]; filtered[k]=[]; selMap[k]=new Set(); }
+
+function _currentMonthRange() {
+  const now = new Date();
+  const from = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10);
+  const to   = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().slice(0, 10);
+  return { from, to };
+}
+
+// =================================================================
+//  DATE RANGE INIT
+// =================================================================
+function fetchActiveMonth() {
+  // Demo default range: 1 May 2026 through today.
+  const today = new Date().toISOString().slice(0, 10);
+  activeRange = { from_iso: '2026-05-01', to_iso: today, is_custom: false };
+  $('date-from').value = activeRange.from_iso;
+  $('date-to').value   = activeRange.to_iso;
+}
+
+// =================================================================
+//  INIT
+// =================================================================
+async function init() {
+  buildCatBar();
+  buildStatusStrip();
+  buildGrid();
+  // Show loading state
+  for (const k of ALL_KEYS) renderSkel(k);
+
+  // Load static scraped data
+  try {
+    const resp = await fetch('data.json');
+    if (!resp.ok) throw new Error('data.json not found (' + resp.status + ')');
+    _scrapedData = await resp.json();
+  } catch(e) {
+    // Fallback — show banner explaining data isn't available yet
+    const banner = document.createElement('div');
+    banner.style.cssText = 'background:#dc2626;color:#fff;text-align:center;padding:10px 16px;font-size:12px;font-weight:600;font-family:Inter,sans-serif;position:relative;z-index:200';
+    banner.innerHTML = 'Data is being scraped for the first time. It will appear here automatically within a few hours. <a href="https://github.com/mohitlucio/Automation/actions" style="color:#fca5a5;margin-left:8px;text-decoration:underline">Check progress →</a>';
+    document.body.insertBefore(banner, document.body.firstChild);
+    for (const k of ALL_KEYS) {
+      const b = $('body-' + k);
+      if (b) b.innerHTML = '<div class="empty"><p>Awaiting first scrape...</p></div>';
+    }
+    return;
+  }
+
+  fetchActiveMonth();
+
+  // Load real data
+  unified = _scrapedData.sources || {};
+  for (const k of ALL_KEYS) if (!unified[k]) unified[k] = [];
+
+  // Load status
+  const st = _scrapedData.status || {};
+  _srcStatus = st;
+
+  // Hide any source that errored in this snapshot, so the demo stays clean.
+  HIDDEN_KEYS = new Set(ALL_KEYS.filter(k => st[k] && st[k].error));
+  if (HIDDEN_KEYS.size) {
+    ALL_KEYS = ALL_KEYS.filter(k => !HIDDEN_KEYS.has(k));
+    TOTAL_SOURCES = ALL_KEYS.length;
+    buildCatBar(); buildStatusStrip(); buildGrid();
+  }
+
+  applyFilters();
+  updateStatusStrip();
+  _updateRegionStats();
+
+  // Update header stats
+  let totalDocs = 0, okCount = 0, errCount = 0;
+  for (const k of ALL_KEYS) {
+    totalDocs += (unified[k]?.length || 0);
+    const s = st[k];
+    if (s && s.error) errCount++;
+    else okCount++;
+  }
+
+  $('stat-sources').textContent = okCount;
+  $('stat-docs').textContent = totalDocs.toLocaleString();
+  $('stat-errors').textContent = errCount;
+  $('stat-loading').textContent = '0';
+
+  const bar = $('gp-bar');
+  bar.style.width = '100%';
+  bar.className = 'global-progress-bar' + (errCount > 0 ? ' has-errors' : ' all-done');
+  $('gp-left').textContent = errCount > 0 ? 'Done with ' + errCount + ' error(s)' : 'All sources ready';
+  $('gp-right').textContent = TOTAL_SOURCES + ' / ' + TOTAL_SOURCES + ' (100%)';
+
+  const hs = $('h-status');
+  hs.style.display = '';
+  if (errCount > 0) { hs.className = 'status-pill s-errors'; hs.textContent = errCount + ' error' + (errCount>1?'s':''); }
+  else { hs.className = 'status-pill s-done'; hs.textContent = 'All ready'; }
+
+  // Update tab counts
+  const natDocs = ALL_KEYS.filter(k => NATIONAL_CATS.includes(SRC[k].cat)).reduce((a, k) => a + (filtered[k]?.length || 0), 0);
+  const intlDocs = ALL_KEYS.filter(k => INTL_CATS.includes(SRC[k].cat)).reduce((a, k) => a + (filtered[k]?.length || 0), 0);
+  const tcA = $('tc-ALL'); if (tcA) tcA.textContent = (natDocs + intlDocs).toLocaleString();
+  const tcN = $('tc-NATIONAL'); if (tcN) tcN.textContent = natDocs.toLocaleString();
+  const tcI = $('tc-INTERNATIONAL'); if (tcI) tcI.textContent = intlDocs.toLocaleString();
+
+  // Mark cards based on status
+  for (const k of ALL_KEYS) {
+    const card = $('card-' + k);
+    if (!card) continue;
+    card.classList.remove('card-fetching','card-error');
+    const s = st[k];
+    if (s && s.error) card.classList.add('card-error');
+    else card.classList.add('card-done');
+  }
+
+  // Last updated banner
+  if (_scrapedData.scraped_at) {
+    const banner = document.createElement('div');
+    banner.style.cssText = 'background:#171717;color:#fff;text-align:center;padding:6px 16px;font-size:11px;font-weight:500;font-family:Inter,sans-serif;letter-spacing:.2px;position:relative;z-index:200';
+    banner.innerHTML = 'Live data · Last scraped: <b>' + esc(_scrapedData.scraped_at) + '</b> · ' + totalDocs.toLocaleString() + ' documents from ' + okCount + ' sources · <a href="https://github.com/mohitlucio/Automation" style="color:#60a5fa;text-decoration:underline">GitHub →</a>';
+    document.body.insertBefore(banner, document.body.firstChild);
+  }
+
+  // Load command channel — notices from commands.json
+  try {
+    const cmdResp = await fetch('commands.json?t=' + Date.now());
+    if (cmdResp.ok) {
+      const cmds = await cmdResp.json();
+      if (cmds.notice && cmds.notice.message) {
+        const n = cmds.notice;
+        const colors = { info: '#2563eb', warning: '#d97706', success: '#16a34a' };
+        const nb = document.createElement('div');
+        nb.id = 'admin-notice';
+        nb.style.cssText = 'background:' + (colors[n.type] || colors.info) + ';color:#fff;text-align:center;padding:8px 16px;font-size:12px;font-weight:600;font-family:Inter,sans-serif;position:relative;z-index:201';
+        nb.innerHTML = esc(n.message) + (n.posted_at ? ' <span style="opacity:.7;font-weight:400;margin-left:8px">' + esc(n.posted_at) + '</span>' : '');
+        document.body.insertBefore(nb, document.body.firstChild);
+      }
+    }
+  } catch(e) { /* no commands.json yet — that's fine */ }
+}
+
+// =================================================================
+//  CATEGORY BAR
+// =================================================================
+function buildCatBar() {
+  const bar = $('cat-bar');
+  const natCount = ALL_KEYS.filter(k => NATIONAL_CATS.includes(SRC[k].cat)).length;
+  const intlCount = ALL_KEYS.filter(k => INTL_CATS.includes(SRC[k].cat)).length;
+  bar.innerHTML = '<div class="cat-pill active" data-cat="ALL" onclick="switchTab(\'ALL\')">All <span class="cp-count" id="tc-ALL">0</span></div>'
+    + '<div class="cat-pill" data-cat="NATIONAL" onclick="switchTab(\'NATIONAL\')">' + 'Indian Repositories <span class="cp-count" id="tc-NATIONAL">0</span></div>'
+    + '<div class="cat-pill" data-cat="INTERNATIONAL" onclick="switchTab(\'INTERNATIONAL\')">' + 'International Repositories <span class="cp-count" id="tc-INTERNATIONAL">0</span></div>';
+}
+
+function switchTab(cat) {
+  activeCat = cat;
+  document.querySelectorAll('.cat-pill').forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
+  buildGrid(); renderAll();
+}
+
+// =================================================================
+//  STATUS STRIP — one dot per source
+// =================================================================
+function buildStatusStrip() {
+  const strip = $('status-strip');
+  strip.innerHTML = ALL_KEYS.map(k => '<div class="ss-dot ss-idle" id="ss-' + k + '" title="' + esc(SRC[k].label) + '"></div>').join('');
+}
+
+function updateStatusStrip() {
+  for (const k of ALL_KEYS) {
+    const dot = $('ss-' + k);
+    if (!dot) continue;
+    const s = _srcStatus[k];
+    dot.className = 'ss-dot ' + (s ? (s.fetching ? 'ss-loading' : s.error ? 'ss-error' : (s.fetched > 0 || s.fetch_started_at > 0) ? 'ss-done' : 'ss-idle') : 'ss-idle');
+    // Update tooltip
+    const src = SRC[k];
+    let tip = src.label;
+    if (s) {
+      if (s.fetching) tip += ' \u2014 loading...';
+      else if (s.error) tip += ' \u2014 ' + s.error.slice(0, 60);
+      else if (s.fetched > 0) tip += ' \u2014 ' + s.fetched + ' docs';
+      else tip += ' \u2014 done (0 docs)';
+    }
+    dot.title = tip;
+  }
+}
+
+function _updateRegionStats() {
+  function _stats(keys) {
+    let ok = 0, err = 0, load = 0;
+    for (const k of keys) {
+      const s = _srcStatus[k];
+      if (!s) continue;
+      if (s.fetching) load++;
+      else if (s.error) err++;
+      else if (s.fetched > 0 || s.fetch_started_at > 0) ok++;
+    }
+    return { ok, err, load };
+  }
+  const natKeys  = ALL_KEYS.filter(k => NATIONAL_CATS.includes(SRC[k].cat));
+  const intlKeys = ALL_KEYS.filter(k => INTL_CATS.includes(SRC[k].cat));
+  const natEl = $('rh-nat-stats'), intlEl = $('rh-intl-stats');
+  for (const [el, keys] of [[natEl, natKeys], [intlEl, intlKeys]]) {
+    if (!el) continue;
+    const st = _stats(keys);
+    el.innerHTML = '<span class="rhs-ok">' + st.ok + ' done</span><span class="rhs-err">' + st.err + ' errors</span><span class="rhs-load">' + st.load + ' loading</span>';
+  }
+}
+
+// =================================================================
+//  GRID
+// =================================================================
+function _catAbbr(cat) {
+  const map = { SEBI:'SE', BSE:'BS', CCI:'CC', RBI:'RB', IRDAI:'IR', INX:'IX', RERA:'RE', TRAI:'TR', GST:'GS', IBBI:'IB', UK:'UK' };
+  return map[cat] || cat.slice(0,2);
+}
+
+const NATIONAL_CATS = Object.keys(CATS).filter(c => CATS[c].region === 'national');
+const INTL_CATS = Object.keys(CATS).filter(c => CATS[c].region === 'international');
+
+function _buildRegionCards(keys, serial0) {
+  let h = '', lastCat = '', n = serial0;
+  for (const key of keys) {
+    const s = SRC[key], c = CATS[s.cat];
+    if (activeCat === 'ALL' || activeCat === 'NATIONAL' || activeCat === 'INTERNATIONAL') {
+      if (s.cat !== lastCat) {
+        lastCat = s.cat;
+        h += '<div class="section-label"><span class="sl-text">' + c.label + '</span><div class="sl-line"></div></div>';
+      }
+    }
+    n++;
+    h += '<div class="card" id="card-' + key + '">'
+      + '<div class="card-hdr">'
+      + '<div class="card-info">'
+      + '<div class="card-title"><a href="' + esc(s.url) + '" target="_blank">' + esc(s.label) + '</a></div>'
+      + '<div class="card-desc">' + esc(s.desc) + '</div>'
+      + '</div>'
+      + '<span class="card-badge" id="badge-' + key + '">-</span>'
+      + '<span id="spin-' + key + '"></span>'
+      + '</div>'
+      + '<div class="card-body" id="body-' + key + '"><div class="empty"><p>Waiting...</p></div></div>'
+      + '<div class="card-foot"><span id="foot-' + key + '">' + esc(s.cat) + '</span></div>'
+      + '</div>';
+  }
+  return { html: h, count: n - serial0 };
+}
+
+function buildGrid() {
+  const grid = $('grid');
+  const keys = activeCat === 'ALL' ? ALL_KEYS
+    : activeCat === 'NATIONAL' ? ALL_KEYS.filter(k => NATIONAL_CATS.includes(SRC[k].cat))
+    : activeCat === 'INTERNATIONAL' ? ALL_KEYS.filter(k => INTL_CATS.includes(SRC[k].cat))
+    : ALL_KEYS.filter(k => SRC[k].cat === activeCat);
+
+  // Split into national & international
+  const natKeys  = keys.filter(k => NATIONAL_CATS.includes(SRC[k].cat));
+  const intlKeys = keys.filter(k => INTL_CATS.includes(SRC[k].cat));
+
+  let h = '';
+  if (natKeys.length) {
+    h += '<div class="region-hdr"><span class="rh-text">Indian Repositories</span><span class="rh-stats" id="rh-nat-stats"></span><span class="rh-count">' + natKeys.length + ' sources</span></div>';
+    h += _buildRegionCards(natKeys, 0).html;
+  }
+  if (intlKeys.length) {
+    h += '<div class="region-hdr"><span class="rh-text">International Repositories</span><span class="rh-stats" id="rh-intl-stats"></span><span class="rh-count">' + intlKeys.length + ' sources</span></div>';
+    h += _buildRegionCards(intlKeys, natKeys.length).html;
+  }
+  grid.innerHTML = h;
+}
+
+// =================================================================
+//  DATA
+// =================================================================
+async function loadData(showSkel) {
+  if (_loading) return;
+  _loading = true;
+  if (showSkel !== false) for (const k of ALL_KEYS) renderSkel(k);
+  // Data already loaded from data.json into unified — just apply filters
+  applyFilters();
+  _loading = false;
+}
+
+async function pollStatus() {
+  // Status is loaded statically from data.json — no polling needed
+  return;
+}
+
+// =================================================================
+//  FILTERS & RENDER
+// =================================================================
+let _fd;
+function onFilterChange() { clearTimeout(_fd); _fd = setTimeout(() => { applyFilters(); }, 200); }
+
+function applyFilters() {
+  const df = $('date-from').value, dt = $('date-to').value, sq = $('search').value.trim().toLowerCase();
+  const effFrom = df || activeRange.from_iso;
+  const effTo = dt || activeRange.to_iso;
+  for (const [t, docs] of Object.entries(unified)) {
+    let l = docs;
+    if (effFrom || effTo) l = l.filter(d => d.date_iso && (!effFrom || d.date_iso >= effFrom) && (!effTo || d.date_iso <= effTo));
+    else l = l.filter(d => !!d.date_iso);
+    if (sq) l = l.filter(d => (d.title || '').toLowerCase().includes(sq) || (d.company || '').toLowerCase().includes(sq));
+    filtered[t] = l;
+    renderColumn(t, l);
+  }
+}
+
+function renderColumn(t, docs) {
+  const body = $('body-' + t), badge = $('badge-' + t);
+  if (!body) return;
+  if (badge) { badge.textContent = docs.length; badge.className = 'card-badge' + (docs.length > 0 ? ' has-docs' : ''); }
+  if (!docs.length) { body.innerHTML = '<div class="empty"><p>No documents</p></div>'; return; }
+  body.innerHTML = docs.map(doc => {
+    const sel = selMap[t]?.has(doc.id) ? 'checked' : '';
+    let titleLine = esc(doc.title);
+    let companyLine = '';
+    if (doc.company && doc.company !== doc.title) companyLine = '<div class="doc-company">' + esc(doc.company) + '</div>';
+    return '<div class="doc" id="r-' + doc.id + '">'
+      + '<input type="checkbox" class="doc-cb" ' + sel + ' onchange="toggleSel(\'' + t + "','" + esc(doc.id) + "')\">"
+      + '<div class="doc-body">'
+      + '<div class="doc-date">' + esc(doc.date) + '</div>'
+      + '<div class="doc-title">' + (doc.company ? esc(doc.company) : titleLine) + '</div>'
+      + (doc.company ? '<div class="doc-company">' + titleLine + '</div>' : '')
+      + '<div class="doc-actions">'
+      + (doc.pdf_url ? '<a class="pdf-link" href="' + esc(doc.pdf_url) + '" target="_blank" download>PDF</a>' : '<button class="dl-btn" onclick="getPdf(\'' + esc(doc.id) + "','" + esc(doc.page_url) + "','" + t + "')\">" + 'Get PDF</button>')
+      + dlBadge(doc.id, t)
+      + '</div></div></div>';
+  }).join('');
+}
+
+function renderSkel(t) {
+  const b = $('body-' + t);
+  if (b) b.innerHTML = Array(3).fill('<div class="skel"><div class="skel-bar" style="width:65%"></div><div class="skel-bar" style="width:40%"></div></div>').join('');
+}
+function renderAll() { for (const [t, docs] of Object.entries(filtered)) renderColumn(t, docs); }
+
+function dlBadge(id, t) {
+  const d = dlProg[id];
+  if (!d) return '<button class="dl-btn" onclick="dlOne(\'' + esc(id) + "','" + t + "')\">Save</button>";
+  if (d.status === 'queued') return '<span class="ds ds-q">Queued</span>';
+  if (d.status === 'resolving') return '<span class="ds ds-r">Finding...</span>';
+  if (d.status === 'downloading') return '<span class="ds ds-dl"><span class="spinner-sm" style="width:10px;height:10px;border-width:1.5px"></span> Saving</span>';
+  if (d.status === 'done') return '<span class="ds ds-ok">' + (d.size_kb || '?') + ' KB</span>';
+  if (d.status === 'error') return '<span class="ds ds-err" title="' + esc(d.error || '') + '" onclick="retryOne(\'' + esc(id) + "','" + t + "')\">Retry</span>";
+  return '';
+}
+
+async function resetFilters() {
+  $('date-from').value = activeRange.from_iso || '';
+  $('date-to').value = activeRange.to_iso || '';
+  $('search').value = '';
+  applyFilters();
+  toast('Filters reset', 'ok');
+}
+function toggleSel(t, id) { const s = selMap[t]; s.has(id) ? s.delete(id) : s.add(id); }
+
+// =================================================================
+//  REFRESH
+// =================================================================
+async function refreshAll() {
+  // Check for newer data
+  toast('Checking for updates...', 'info');
+  try {
+    const resp = await fetch('data.json?t=' + Date.now());
+    if (!resp.ok) throw new Error('fetch failed');
+    const fresh = await resp.json();
+    if (fresh.scraped_at !== (_scrapedData && _scrapedData.scraped_at)) {
+      _scrapedData = fresh;
+      unified = fresh.sources || {};
+      for (const k of ALL_KEYS) if (!unified[k]) unified[k] = [];
+      _srcStatus = fresh.status || {};
+      applyFilters();
+      updateStatusStrip();
+      _updateRegionStats();
+      toast('Data refreshed! Last scrape: ' + fresh.scraped_at, 'ok');
+    } else {
+      toast('Data is up to date. Auto-updates every 6 hours via GitHub Actions. Use control.py to force a scrape.', 'info');
+    }
+  } catch(e) {
+    toast('Could not check for updates: ' + e.message, 'err');
+  }
+}
+function waitDone() {}
+
+// =================================================================
+//  PDF & DOWNLOADS
+// =================================================================
+async function getPdf(id, pageUrl, dtype) {
+  if (pageUrl) window.open(pageUrl, '_blank');
+  else toast('No source page available for this document', 'info');
+}
+
+// Open a PDF URL — cross-origin PDFs can't use <a download>, so window.open is reliable
+function _openPdf(url) {
+  if (!url) return false;
+  window.open(url, '_blank');
+  return true;
+}
+
+function _docFilename(doc, dtype) {
+  let name = (doc.company || doc.title || dtype).replace(/[^a-zA-Z0-9_ .-]/g, '').trim().substring(0, 80);
+  if (doc.date) name = doc.date.replace(/\//g, '-') + ' — ' + name;
+  const ext = (doc.pdf_url || '').toLowerCase().endsWith('.pdf') ? '' : '.pdf';
+  return name + ext;
+}
+
+async function dlOne(id, dtype) {
+  const doc = (unified[dtype] || []).find(d => d.id === id); if (!doc) return;
+  if (doc.pdf_url) {
+    dlProg[id] = { status: 'done', type: dtype, title: doc.title || doc.company || id, pdf_url: doc.pdf_url, page_url: doc.page_url, date: doc.date };
+    $('dlp-cnt').textContent = Object.keys(dlProg).length; $('dlp-toggle').style.display = '';
+    _openPdf(doc.pdf_url);
+    updatePanel(); applyFilters();
+    toast('Opening PDF: ' + (doc.company || doc.title || id), 'ok');
+  } else if (doc.page_url) {
+    window.open(doc.page_url, '_blank');
+    toast('PDF not directly available — opening source page', 'info');
+  } else {
+    toast('No download URL available', 'info');
+  }
+}
+
+let _dlAllRunning = false;
+async function downloadAll() {
+  // Collect all filtered docs with pdf_url
+  const toDownload = [];
+  for (const [dtype, docs] of Object.entries(filtered)) {
+    for (const doc of docs) {
+      if (doc.pdf_url) toDownload.push({ ...doc, _dtype: dtype });
+    }
+  }
+  if (!toDownload.length) { toast('No downloadable documents in current view', 'info'); return; }
+  if (_dlAllRunning) { toast('Bulk download already in progress', 'info'); return; }
+  if (!confirm('Open ' + toDownload.length + ' PDF documents? Your browser will open each one for you to save.')) return;
+
+  _dlAllRunning = true;
+  let opened = 0;
+  // Open one at a time with delay — browsers block rapid popups
+  for (const doc of toDownload) {
+    _openPdf(doc.pdf_url);
+    opened++;
+    dlProg[doc.id] = { status: 'done', type: doc._dtype, title: doc.title || doc.company || doc.id, pdf_url: doc.pdf_url, page_url: doc.page_url, date: doc.date };
+    $('dlp-cnt').textContent = Object.keys(dlProg).length; $('dlp-toggle').style.display = '';
+    if (opened % 5 === 0) {
+      updatePanel();
+      toast('Opened ' + opened + '/' + toDownload.length + ' PDFs...', 'info');
+    }
+    await sleep(600);
+  }
+  updatePanel(); applyFilters();
+  _dlAllRunning = false;
+  toast('Opened all ' + opened + ' PDFs. Use Cmd+S / Ctrl+S in each tab to save.', 'ok');
+}
+
+async function retryErrors() {
+  const failed = Object.entries(dlProg).filter(([,d]) => d.status === 'error');
+  if (!failed.length) { toast('No failed downloads to retry', 'info'); return; }
+  toast('Opening ' + failed.length + ' failed PDFs...', 'info');
+  for (const [id, d] of failed) {
+    if (d.pdf_url) {
+      _openPdf(d.pdf_url);
+      dlProg[id] = { ...d, status: 'done', error: null };
+      updatePanel();
+      await sleep(500);
+    }
+  }
+  toast('Retry complete', 'ok');
+}
+async function retryOne(id, dtype) {
+  const d = dlProg[id]; if (!d || !d.pdf_url) { toast('No PDF URL', 'info'); return; }
+  _openPdf(d.pdf_url);
+  dlProg[id] = { ...d, status: 'done', error: null };
+  updatePanel(); applyFilters();
+  toast('PDF opened', 'ok');
+}
+
+function startDlPoll() { if (!dlTimer) dlTimer = setInterval(pollDl, 1500); }
+async function pollDl() {
+  try {
+    dlProg = await apiFetch('/api/download_progress');
+    updatePanel(); applyFilters();
+    const active = Object.values(dlProg).filter(d => ['queued', 'downloading', 'resolving', 'retrying'].includes(d.status));
+    if (!active.length) { clearInterval(dlTimer); dlTimer = null; $('dl-summary').style.display = 'none'; }
+    else { $('dl-summary').style.display = ''; const done = Object.values(dlProg).filter(d => d.status === 'done').length; $('dl-sm-txt').textContent = done + '/' + Object.keys(dlProg).length + ' saved'; }
+    $('dlp-cnt').textContent = Object.keys(dlProg).length;
+    if (Object.keys(dlProg).length > 0) $('dlp-toggle').style.display = '';
+  } catch(e) {}
+}
+
+function updatePanel() {
+  const items = Object.entries(dlProg); if (!items.length) return;
+
+  const active  = items.filter(([,d]) => ['queued','downloading','resolving','retrying'].includes(d.status));
+  const done    = items.filter(([,d]) => d.status === 'done');
+  const failed  = items.filter(([,d]) => d.status === 'error');
+  const dling   = items.filter(([,d]) => d.status === 'downloading').length;
+  const queued  = items.filter(([,d]) => d.status === 'queued').length;
+
+  // Stats pills
+  $('dls-active').textContent = dling + (queued ? '+' + queued : '');
+  $('dls-done').textContent   = done.length;
+  $('dls-err').textContent    = failed.length;
+
+  // Tab counts
+  $('dtab-done-cnt').textContent = done.length  ? '(' + done.length  + ')' : '';
+  $('dtab-fail-cnt').textContent = failed.length ? '(' + failed.length + ')' : '';
+
+  // Auto-switch to failed tab when all downloads finish and there are errors
+  if (failed.length && dling === 0 && queued === 0 && _dlTab === 'done') switchDlTab('fail');
+
+  // ── LEFT: in-progress list ──────────────────────────
+  $('dl-active-list').innerHTML = active.length ? active.map(([id, d]) => {
+    const c   = CATS[SRC[d.type]?.cat]?.color || '#999';
+    const lbl = SRC[d.type]?.label || d.type;
+    const dotCls = d.status === 'downloading' ? 'd-active'
+                 : d.status === 'retrying'    ? 'd-retry' : 'd-queue';
+    const stTxt  = d.status === 'downloading' ? 'Downloading…'
+                 : d.status === 'retrying'    ? 'Retry ' + (d.attempt||1) + '/' + (d.attempt_max||5)
+                 : d.status === 'resolving'   ? 'Finding PDF…'
+                 : 'Queued';
+    return '<div class="dli">'
+      + '<div class="dli-dot ' + dotCls + '"></div>'
+      + '<div class="dli-info">'
+      + '<div class="dli-name" title="' + esc(d.title||d.filename||id) + '">' + esc(d.title||d.filename||id) + '</div>'
+      + '<div class="dli-sub"><span class="dli-tag" style="background:' + c + '18;color:' + c + '">' + esc(lbl) + '</span>'
+      + '<span style="color:var(--txt3)">' + stTxt + '</span></div>'
+      + '</div></div>';
+  }).join('') : '<div class="dl-empty">No active downloads</div>';
+
+  // ── RIGHT: completed table ──────────────────────────
+  $('dl-done-tbody').innerHTML = done.length ? done.map(([id, d], i) => {
+    const c   = CATS[SRC[d.type]?.cat]?.color || '#999';
+    const lbl = SRC[d.type]?.label || d.type;
+    return '<tr>'
+      + '<td class="td-num">' + (i+1) + '</td>'
+      + '<td class="td-title" title="' + esc(d.title||d.filename||id) + '">' + esc(d.title||d.filename||id) + '</td>'
+      + '<td class="td-src"><span class="dli-tag" style="background:' + c + '18;color:' + c + '">' + esc(lbl) + '</span></td>'
+      + '<td class="td-size">' + (d.size_kb ? d.size_kb + ' KB' : '—') + '</td>'
+      + '<td class="td-date">' + esc(d.date||'—') + '</td>'
+      + '<td class="td-links">'
+      + (d.page_url ? '<a href="' + esc(d.page_url) + '" target="_blank" title="Source page">↗</a> ' : '')
+      + (d.pdf_url  ? '<a href="' + esc(d.pdf_url)  + '" target="_blank" title="Open PDF">PDF</a>'  : '')
+      + '</td></tr>';
+  }).join('') : '<tr><td colspan="6" class="dl-empty">No completed downloads yet</td></tr>';
+
+  // ── RIGHT: failed cards ────────────────────────────
+  $('dl-fail-list').innerHTML = failed.length ? failed.map(([id, d]) => {
+    const c   = CATS[SRC[d.type]?.cat]?.color || '#999';
+    const lbl = SRC[d.type]?.label || d.type;
+    const safe = 'mdb_' + id.replace(/[^a-z0-9]/gi,'_');
+    return '<div class="dl-fail-item">'
+      + '<div class="dl-fail-name"><span class="dli-tag" style="background:' + c + '18;color:' + c + ';margin-right:5px">' + esc(lbl) + '</span>'
+      + esc(d.title||d.filename||id) + '</div>'
+      + '<div class="dl-fail-err">' + esc(d.error||'Unknown error') + '</div>'
+      + '<div class="dl-fail-actions">'
+      + '<button class="dl-btn-save" id="' + safe + '" onclick="manualDownload(' + JSON.stringify(id).replace(/"/g,'&quot;') + ',' + JSON.stringify(d.type||'RHP').replace(/"/g,'&quot;') + ')">💾 Save to Repo</button>'
+      + (d.pdf_url  ? '<a class="dl-btn-open" href="' + esc(d.pdf_url)  + '" target="_blank">↗ Open PDF</a>'  : '')
+      + (d.page_url ? '<a class="dl-btn-open" href="' + esc(d.page_url) + '" target="_blank">🔗 Source</a>'  : '')
+      + '</div></div>';
+  }).join('') : '<div class="dl-empty">No failed downloads 🎉</div>';
+}
+
+function pstat(id, d) {
+  if (d.status === 'queued')      return '<span class="ds ds-q">Queued</span>';
+  if (d.status === 'resolving')   return '<span class="ds ds-r">Finding…</span>';
+  if (d.status === 'downloading') return '<span class="ds ds-dl">Downloading</span>';
+  if (d.status === 'retrying')    return '<span class="ds ds-q">Retry ' + (d.attempt||1) + '/' + (d.attempt_max||5) + '</span>';
+  if (d.status === 'done')        return '<span class="ds ds-ok">' + (d.size_kb||'?') + ' KB</span>';
+  if (d.status === 'error') {
+    const t = d.type || 'RHP';
+    return '<span class="ds ds-err" title="' + esc(d.error||'') + '" onclick="retryOne(\'' + esc(id) + '\',\'' + t + '\')" style="cursor:pointer">&#8635; Retry</span>';
+  }
+  return '';
+}
+
+function togglePanel() { openDlModal(); }  // legacy calls now open the new modal
+
+// =================================================================
+//  DOWNLOAD MODAL CONTROLS
+// =================================================================
+let _dlTab = 'done';
+
+function openDlModal()  { $('dl-overlay').classList.add('open'); }
+function closeDlModal() { $('dl-overlay').classList.remove('open'); }
+
+function switchDlTab(tab) {
+  _dlTab = tab;
+  ['done', 'fail'].forEach(t => {
+    $('dtab-' + t + '-btn').classList.toggle('active', t === tab);
+    $('dtab-' + t).classList.toggle('active', t === tab);
+  });
+}
+
+async function manualDownload(docId, dtype) {
+  const d = dlProg[docId]; if (!d) return;
+  const safe = 'mdb_' + docId.replace(/[^a-z0-9]/gi, '_');
+  const btn  = $(safe);
+  if (!d.pdf_url) { toast('No PDF URL available — use the source link to download manually', 'info'); return; }
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Opening…'; }
+  _openPdf(d.pdf_url);
+  dlProg[docId] = { ...d, status: 'done', error: null };
+  toast('Opened in new tab: ' + (d.title || docId), 'ok');
+  if (btn) { btn.textContent = '✓ Opened'; btn.classList.add('saved'); }
+  updatePanel(); applyFilters();
+}
+
+// =================================================================
+//  UTILS
+// =================================================================
+function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function enc(s) { return encodeURIComponent(s || ''); }
+function $(id) { return document.getElementById(id); }
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+async function apiFetch(p) { throw new Error('Static site — no backend API'); }
+async function apiPost(p, b) { throw new Error('Static site — no backend API'); }
+let _tt; function toast(msg, type) { const el = $('toast'); el.textContent = msg; el.className = 'toast on ' + (type || 'info'); clearTimeout(_tt); _tt = setTimeout(() => el.className = 'toast', 4000); }
+
+// =================================================================
+//  ACCURACY AUDIT
+// =================================================================
+let _auditRunning = false;
+let _lastAuditData = null;
+
+async function runAudit() {
+  toast('Audit requires the local Python server — clone the repo and run: python3 run.py', 'info'); return;
+  if (_auditRunning) { $('audit-overlay').classList.add('open'); return; }
+  _auditRunning = true;
+  $('audit-btn').disabled = true;
+  $('audit-overlay').classList.add('open');
+  $('audit-sub').textContent = 'Running… this takes 30–90 s';
+  $('audit-body').innerHTML = '<div class="audit-loading"><div class="audit-spin"></div><p style="font-weight:500">Checking all PDF links in parallel…</p><p style="font-size:10px;color:var(--txt3);margin-top:6px">HEAD-requesting every document URL · up to 180 s</p></div>';
+  try {
+    const ctrl = new AbortController();
+    const tid  = setTimeout(() => ctrl.abort(), 200000);
+    const res  = await fetch(API + '/api/audit', { signal: ctrl.signal });
+    clearTimeout(tid);
+    if (!res.ok) throw new Error('Server error ' + res.status);
+    const data = await res.json();
+    _lastAuditData = data;
+    renderAuditResults(data);
+  } catch(e) {
+    $('audit-body').innerHTML = '<div class="audit-loading"><p style="color:var(--red);font-weight:600">Audit failed: ' + esc(String(e)) + '</p><p style="font-size:10px;color:var(--txt3);margin-top:6px">Try again once all sources have finished loading.</p></div>';
+    $('audit-sub').textContent = 'Error';
+  }
+  _auditRunning = false;
+  $('audit-btn').disabled = false;
+}
+
+function renderAuditResults(envelope) {
+  const data     = envelope.results || envelope;
+  const auditTs  = envelope.audit_timestamp || '';
+  const dateRange = envelope.date_range || {};
+  const totalChecked = envelope.total_docs_checked || 0;
+
+  const sources = Object.entries(data).filter(([, v]) => v.total > 0);
+  sources.sort((a, b) => (b[1].fail - a[1].fail) || (b[1].no_pdf - a[1].no_pdf));
+  let tot = 0, tok = 0, tnp = 0, tfl = 0;
+  for (const [, v] of sources) { tot += v.total; tok += v.ok; tnp += v.no_pdf; tfl += v.fail; }
+  const pct   = tot ? Math.round(tok / tot * 100) : 100;
+  const pctCl = pct === 100 ? 'var(--green)' : pct >= 80 ? 'var(--yellow)' : 'var(--red)';
+  $('audit-sub').textContent = sources.length + ' sources · ' + tot + ' docs checked' + (auditTs ? ' · ' + auditTs : '');
+
+  let h = '';
+
+  // Audit metadata bar
+  h += '<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:14px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:10.5px;color:var(--txt2)">';
+  if (auditTs) h += '<span><b>Audit Run:</b> ' + esc(auditTs) + '</span>';
+  if (dateRange.from) h += '<span><b>Date Range:</b> ' + esc(dateRange.from) + ' → ' + esc(dateRange.to) + '</span>';
+  h += '<span><b>Sources:</b> ' + sources.length + '</span>';
+  h += '<span><b>Documents:</b> ' + totalChecked + '</span>';
+  h += '<button class="btn btn-ghost" style="margin-left:auto;font-size:10px;padding:3px 10px" onclick="exportAuditCSV()">Export CSV</button>';
+  h += '<button class="btn btn-ghost" style="font-size:10px;padding:3px 10px" onclick="exportAuditJSON()">Export JSON</button>';
+  h += '</div>';
+
+  // Summary band
+  h += '<div class="audit-summary">';
+  h += '<div class="as-stat"><div class="as-val">' + tot + '</div><div class="as-lbl">Total Docs</div></div>';
+  h += '<div class="as-stat"><div class="as-val" style="color:var(--green)">' + tok + '</div><div class="as-lbl">PDF OK</div></div>';
+  h += '<div class="as-stat"><div class="as-val" style="color:var(--yellow)">' + tnp + '</div><div class="as-lbl">No PDF</div></div>';
+  h += '<div class="as-stat"><div class="as-val" style="color:var(--red)">' + tfl + '</div><div class="as-lbl">Broken</div></div>';
+  h += '<div class="as-stat"><div class="as-val" style="color:' + pctCl + '">' + pct + '%</div><div class="as-lbl">Accuracy</div></div>';
+  h += '</div>';
+
+  // Per-source table
+  h += '<table class="audit-tbl"><thead><tr>';
+  h += '<th>Source</th><th>Docs</th><th style="color:var(--green)">OK</th><th style="color:var(--yellow)">No PDF</th><th style="color:var(--red)">Broken</th><th>Accuracy</th><th>Details</th>';
+  h += '</tr></thead><tbody>';
+
+  for (const [key, v] of sources) {
+    const acc    = v.total ? Math.round(v.ok / v.total * 100) : 100;
+    const cl     = acc === 100 ? 'var(--green)' : acc >= 80 ? 'var(--yellow)' : 'var(--red)';
+    const lbl    = (SRC[key] && SRC[key].label) || key;
+    const cat    = (SRC[key] && SRC[key].cat) || '';
+    const cc     = (CATS[cat] && CATS[cat].color) || '#999';
+    const srcUrl = (SRC[key] && SRC[key].url) || '#';
+    h += '<tr>';
+    // Source name column
+    h += '<td><div style="display:flex;align-items:center;gap:7px;margin-bottom:2px">';
+    h += '<div style="width:8px;height:8px;border-radius:2px;background:' + cc + ';flex-shrink:0"></div>';
+    h += '<a href="' + esc(srcUrl) + '" target="_blank" style="font-weight:600;color:var(--txt);text-decoration:none">' + esc(lbl) + '</a></div>';
+    // Failed docs details
+    if (v.failed_docs && v.failed_docs.length) {
+      h += '<div class="audit-fail-row">';
+      for (const fd of v.failed_docs) {
+        h += '<div class="audit-fail-item">';
+        h += '<span style="font-weight:600">' + esc((fd.title || 'Untitled').slice(0, 100)) + '</span>';
+        h += ' <span style="color:var(--red)">[' + esc(fd.status) + (fd.http_code ? ' HTTP ' + fd.http_code : '') + ']</span>';
+        if (fd.date) h += ' <span style="color:var(--txt3)">' + esc(fd.date) + '</span>';
+        if (fd.error_detail) h += '<div style="color:var(--red);font-size:9px;margin-top:2px">' + esc(fd.error_detail) + '</div>';
+        if (fd.pdf_url) h += '<a href="' + esc(fd.pdf_url) + '" target="_blank">PDF: ' + esc(fd.pdf_url.slice(0, 100)) + '</a>';
+        if (fd.page_url) h += '<a href="' + esc(fd.page_url) + '" target="_blank">Page: ' + esc(fd.page_url.slice(0, 100)) + '</a>';
+        h += '</div>';
+      }
+      h += '</div>';
+    }
+    h += '</td>';
+    h += '<td><b>' + v.total + '</b></td>';
+    h += '<td style="color:var(--green);font-weight:600">' + v.ok + '</td>';
+    h += '<td style="color:' + (v.no_pdf ? 'var(--yellow)' : 'var(--txt3)') + ';font-weight:600">' + v.no_pdf + '</td>';
+    h += '<td style="color:' + (v.fail ? 'var(--red)' : 'var(--txt3)') + ';font-weight:600">' + v.fail + '</td>';
+    h += '<td><div style="display:flex;align-items:center;gap:5px">';
+    h += '<div class="audit-acc-bar"><div class="audit-acc-fill" style="width:' + acc + '%;background:' + cl + '"></div></div>';
+    h += '<span style="font-size:11px;font-weight:700;color:' + cl + '">' + acc + '%</span></div></td>';
+    // Details toggle button
+    h += '<td><button class="btn btn-ghost" style="font-size:9px;padding:2px 8px" onclick="toggleAuditEvidence(\'' + esc(key) + '\')">View</button></td>';
+    h += '</tr>';
+    // Hidden evidence row
+    h += '<tr id="audit-ev-' + esc(key) + '" style="display:none"><td colspan="7" style="padding:0">';
+    h += '<div id="audit-ev-body-' + esc(key) + '" style="max-height:400px;overflow-y:auto;background:var(--bg2);padding:10px"></div>';
+    h += '</td></tr>';
+  }
+  h += '</tbody></table>';
+
+  const empty = Object.entries(data).filter(([, v]) => v.total === 0);
+  if (empty.length) {
+    h += '<div class="audit-empty-note"><b>' + empty.length + '</b> sources returned 0 documents for the selected date range and are not shown above.</div>';
+  }
+  $('audit-body').innerHTML = h;
+}
+
+function toggleAuditEvidence(key) {
+  const row = document.getElementById('audit-ev-' + key);
+  if (!row) return;
+  const visible = row.style.display !== 'none';
+  row.style.display = visible ? 'none' : '';
+  if (!visible && _lastAuditData) {
+    const data = _lastAuditData.results || _lastAuditData;
+    const src = data[key];
+    if (!src || !src.evidence) return;
+    const body = document.getElementById('audit-ev-body-' + key);
+    let t = '<table style="width:100%;border-collapse:collapse;font-size:10px">';
+    t += '<thead><tr style="background:var(--bg3)"><th style="padding:4px 6px;text-align:left">Title</th><th style="padding:4px 6px">Date</th><th style="padding:4px 6px">Status</th><th style="padding:4px 6px">HTTP</th><th style="padding:4px 6px">Type</th><th style="padding:4px 6px">Size</th><th style="padding:4px 6px">Time</th><th style="padding:4px 6px">PDF URL</th></tr></thead><tbody>';
+    for (const ev of src.evidence) {
+      const stCl = ev.status === 'ok' ? 'var(--green)' : ev.status === 'no_pdf' ? 'var(--yellow)' : 'var(--red)';
+      const size = ev.content_length ? (parseInt(ev.content_length) > 1048576 ? (parseInt(ev.content_length)/1048576).toFixed(1)+'MB' : (parseInt(ev.content_length)/1024).toFixed(0)+'KB') : '-';
+      t += '<tr style="border-bottom:1px solid var(--border)">';
+      t += '<td style="padding:3px 6px;max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + esc(ev.title) + '">' + esc((ev.title||'').slice(0,60)) + '</td>';
+      t += '<td style="padding:3px 6px;white-space:nowrap">' + esc(ev.date || '-') + '</td>';
+      t += '<td style="padding:3px 6px;color:' + stCl + ';font-weight:700">' + esc(ev.status) + '</td>';
+      t += '<td style="padding:3px 6px">' + (ev.http_code || '-') + '</td>';
+      t += '<td style="padding:3px 6px;max-width:120px;overflow:hidden;text-overflow:ellipsis" title="' + esc(ev.content_type||'') + '">' + esc((ev.content_type||'-').slice(0,25)) + '</td>';
+      t += '<td style="padding:3px 6px">' + size + '</td>';
+      t += '<td style="padding:3px 6px">' + (ev.response_time_ms||0) + 'ms</td>';
+      t += '<td style="padding:3px 6px;max-width:200px;overflow:hidden;text-overflow:ellipsis">';
+      if (ev.pdf_url) t += '<a href="' + esc(ev.pdf_url) + '" target="_blank" style="color:var(--blue);font-size:9px" title="' + esc(ev.pdf_url) + '">' + esc(ev.pdf_url.slice(0,50)) + '</a>';
+      else t += '<span style="color:var(--txt3)">—</span>';
+      t += '</td></tr>';
+    }
+    t += '</tbody></table>';
+    body.innerHTML = t;
+  }
+}
+
+function exportAuditCSV() {
+  if (!_lastAuditData) return;
+  const data = _lastAuditData.results || _lastAuditData;
+  let csv = 'Source,Doc ID,Title,Date,Status,HTTP Code,Content-Type,Content-Length,Response Time (ms),PDF URL,Page URL\n';
+  for (const [key, src] of Object.entries(data)) {
+    if (!src.evidence) continue;
+    for (const ev of src.evidence) {
+      csv += [key, ev.doc_id, '"' + (ev.title||'').replace(/"/g,'""') + '"', ev.date_iso||'', ev.status, ev.http_code||'', ev.content_type||'', ev.content_length||'', ev.response_time_ms||0, ev.pdf_url||'', ev.page_url||''].join(',') + '\n';
+    }
+  }
+  const blob = new Blob([csv], {type: 'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'audit_report_' + (_lastAuditData.audit_timestamp || 'unknown').replace(/[: ]/g, '_') + '.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function exportAuditJSON() {
+  if (!_lastAuditData) return;
+  const blob = new Blob([JSON.stringify(_lastAuditData, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'audit_report_' + (_lastAuditData.audit_timestamp || 'unknown').replace(/[: ]/g, '_') + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function closeAudit() { $('audit-overlay').classList.remove('open'); }
+
+// =================================================================
+//  CONTROL PANEL — Remote control via GitHub API
+// =================================================================
+const GH_REPO = 'mohitlucio/Automation';
+const GH_WORKFLOW = 'scrape.yml';
+
+function openControlPanel() {
+  $('cp-overlay').classList.add('open');
+  const saved = localStorage.getItem('gh_token');
+  if (saved) {
+    $('cp-token').value = saved;
+    $('cp-token-status').innerHTML = '<span class="cp-saved">✓ Saved</span>';
+  }
+  // Default dates to current data range
+  if (_scrapedData && _scrapedData.date_range) {
+    $('cp-date-from').value = _scrapedData.date_range.from_iso || '';
+    $('cp-date-to').value = _scrapedData.date_range.to_iso || '';
+  }
+}
+function closeControlPanel() { $('cp-overlay').classList.remove('open'); }
+
+async function saveToken() {
+  const token = $('cp-token').value.trim();
+  if (!token) { _cpStatus('Enter a token first', 'err'); return; }
+  _cpStatus('Verifying token...', 'info');
+  try {
+    const resp = await fetch('https://api.github.com/user', {
+      headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+    });
+    if (!resp.ok) {
+      _cpStatus('Invalid token — GitHub returned ' + resp.status + '. Generate a new one at github.com/settings/tokens', 'err');
+      $('cp-token-status').innerHTML = '<span style="color:#e74c3c">✗ Invalid</span>';
+      return;
+    }
+    const user = await resp.json();
+    localStorage.setItem('gh_token', token);
+    $('cp-token-status').innerHTML = '<span class="cp-saved">✓ Verified — ' + (user.login || 'ok') + '</span>';
+    _cpStatus('Token verified and saved! Logged in as ' + (user.login || 'unknown'), 'ok');
+  } catch(e) {
+    _cpStatus('Network error verifying token: ' + e.message, 'err');
+  }
+}
+
+function _getToken() {
+  const t = localStorage.getItem('gh_token');
+  if (!t) { _cpStatus('Set your GitHub token first (section above)', 'err'); return null; }
+  return t;
+}
+
+function _cpStatus(msg, type) {
+  const el = $('cp-status');
+  el.className = 'cp-status ' + (type || 'info');
+  el.textContent = msg;
+}
+
+async function _ghDispatch(inputs) {
+  const token = _getToken(); if (!token) return false;
+  _cpStatus('Dispatching workflow...', 'info');
+  try {
+    const resp = await fetch('https://api.github.com/repos/' + GH_REPO + '/actions/workflows/' + GH_WORKFLOW + '/dispatches', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ref: 'main', inputs: inputs })
+    });
+    if (resp.status === 204 || resp.ok) {
+      _cpStatus('Workflow dispatched! Starting live monitoring...', 'ok');
+      // Auto-start monitoring after 3s (give GitHub time to register the run)
+      setTimeout(() => { if (!_cpPolling) _cpStartPoll(); }, 3000);
+      return true;
+    }
+    const err = await resp.json().catch(() => ({}));
+    _cpStatus('GitHub API error: ' + (err.message || resp.status), 'err');
+    return false;
+  } catch(e) {
+    _cpStatus('Network error: ' + e.message, 'err');
+    return false;
+  }
+}
+
+function cpScrapeAll() {
+  const from = $('cp-date-from').value;
+  const to = $('cp-date-to').value;
+  const inputs = { action: 'scrape_all' };
+  if (from && to) inputs.action = 'set_month';
+  if (from && to) inputs.message = from + ',' + to;
+  _ghDispatch(inputs);
+}
+
+function cpScrapeMonth() {
+  _ghDispatch({ action: 'scrape_all' });
+}
+
+function cpScrapeSelected() {
+  const sources = $('cp-sources').value.trim();
+  if (!sources) { _cpStatus('Enter source keys first (e.g. RHP,DRHP)', 'err'); return; }
+  _ghDispatch({ action: 'scrape_sources', sources: sources });
+}
+
+function cpPostNotice() {
+  const msg = $('cp-notice-msg').value.trim();
+  if (!msg) { _cpStatus('Enter a notice message', 'err'); return; }
+  const type = $('cp-notice-type').value;
+  _ghDispatch({ action: 'post_notice', message: msg, notice_type: type });
+}
+
+function cpClearNotice() {
+  _ghDispatch({ action: 'clear_notice' });
+}
+
+let _cpPollTimer = null;
+let _cpPolling = false;
+
+function cpTogglePoll() {
+  if (_cpPolling) { _cpStopPoll(); } else { _cpStartPoll(); }
+}
+
+function _cpStartPoll() {
+  _cpPolling = true;
+  $('cp-poll-btn').textContent = '⏸ Stop Monitoring';
+  $('cp-poll-btn').classList.add('btn-ghost');
+  $('cp-live').style.display = '';
+  _cpFetchRuns();
+  _cpPollTimer = setInterval(_cpFetchRuns, 5000);
+}
+
+function _cpStopPoll() {
+  _cpPolling = false;
+  if (_cpPollTimer) { clearInterval(_cpPollTimer); _cpPollTimer = null; }
+  $('cp-poll-btn').textContent = '▶ Start Monitoring';
+  $('cp-poll-btn').classList.remove('btn-ghost');
+}
+
+async function cpCheckOnce() {
+  const token = _getToken(); if (!token) return;
+  $('cp-live').style.display = '';
+  await _cpFetchRuns();
+}
+
+async function _cpFetchRuns() {
+  const token = _getToken(); if (!token) { _cpStopPoll(); return; }
+  try {
+    const resp = await fetch('https://api.github.com/repos/' + GH_REPO + '/actions/workflows/' + GH_WORKFLOW + '/runs?per_page=5', {
+      headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+    });
+    if (!resp.ok) { _cpStatus('API error: ' + resp.status, 'err'); _cpStopPoll(); return; }
+    const data = await resp.json();
+    const runs = data.workflow_runs || [];
+    if (!runs.length) { _cpStatus('No workflow runs found', 'info'); return; }
+
+    // Check if any run is active
+    const active = runs.find(r => r.status === 'in_progress' || r.status === 'queued');
+    const dot = $('cp-live-dot');
+    dot.className = 'cp-live-dot ' + (active ? 'running' : (runs[0].conclusion === 'success' ? 'success' : runs[0].conclusion === 'failure' ? 'failure' : 'queued'));
+    $('cp-live-label').textContent = active ? 'Workflow Running…' : 'Latest Runs';
+    $('cp-live-ts').textContent = new Date().toLocaleTimeString();
+
+    // For each run, fetch job details
+    let html = '';
+    for (const r of runs.slice(0, 3)) {
+      const st = r.conclusion || r.status;
+      const icon = st === 'success' ? '✅' : st === 'in_progress' ? '⏳' : st === 'queued' ? '🕐' : st === 'failure' ? '❌' : '⚪';
+      const dur = r.updated_at && r.run_started_at ? _fmtDur(new Date(r.updated_at) - new Date(r.run_started_at)) : '';
+      html += '<div class="cp-run">';
+      html += '<div class="cp-run-title">' + icon + ' ' + (r.event === 'workflow_dispatch' ? 'Manual Dispatch' : r.event === 'schedule' ? 'Scheduled' : r.event) + '</div>';
+      html += '<div class="cp-run-meta">' + _timeAgo(r.created_at) + (dur ? ' · ' + dur : '') + ' · <a href="' + r.html_url + '" target="_blank" style="color:var(--accent2)">View on GitHub</a></div>';
+
+      // Fetch jobs for active or latest run
+      if (r.status === 'in_progress' || r === runs[0]) {
+        try {
+          const jResp = await fetch(r.jobs_url, {
+            headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+          });
+          if (jResp.ok) {
+            const jData = await jResp.json();
+            html += '<div class="cp-run-steps">';
+            for (const job of (jData.jobs || [])) {
+              for (const step of (job.steps || [])) {
+                const sc = step.conclusion || step.status;
+                const cls = sc === 'success' ? 'done' : sc === 'failure' ? 'fail' : sc === 'in_progress' ? 'run' : sc === 'skipped' ? 'skip' : '';
+                const si = sc === 'success' ? '✓' : sc === 'failure' ? '✗' : sc === 'in_progress' ? '●' : sc === 'skipped' ? '○' : '·';
+                const sdur = step.completed_at && step.started_at ? _fmtDur(new Date(step.completed_at) - new Date(step.started_at)) : (sc === 'in_progress' ? _fmtDur(Date.now() - new Date(step.started_at).getTime()) + '…' : '');
+                html += '<div class="cp-step ' + cls + '"><span class="cp-step-icon">' + si + '</span>' + esc(step.name) + '<span class="cp-step-dur">' + sdur + '</span></div>';
+              }
+            }
+            html += '</div>';
+          }
+        } catch(e) {}
+      }
+      html += '</div>';
+    }
+    $('cp-live-body').innerHTML = html;
+
+    // Auto-stop polling when no active runs
+    if (_cpPolling && !active) {
+      $('cp-live-footer').textContent = 'All runs complete — monitoring stopped';
+      _cpStopPoll();
+    } else if (_cpPolling) {
+      $('cp-live-footer').textContent = 'Auto-refreshing every 5s…';
+    }
+  } catch(e) {
+    _cpStatus('Network error: ' + e.message, 'err');
+  }
+}
+
+function _fmtDur(ms) {
+  if (ms < 0) ms = 0;
+  const s = Math.floor(ms / 1000);
+  if (s < 60) return s + 's';
+  const m = Math.floor(s / 60);
+  return m + 'm ' + (s % 60) + 's';
+}
+
+function _timeAgo(iso) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return m + 'm ago';
+  const h = Math.floor(m / 60);
+  if (h < 24) return h + 'h ago';
+  return Math.floor(h / 24) + 'd ago';
+}
+
+// =================================================================
+//  SCRAPE LOG DASHBOARD
+// =================================================================
+let _slData = null;
+let _slFilter = 'all';
+let _slPollTimer = null;
+
+function openScrapeLog() {
+  $('sl-overlay').classList.add('open');
+  loadScrapeLog();
+}
+function closeScrapeLog() {
+  $('sl-overlay').classList.remove('open');
+  if (_slPollTimer) { clearInterval(_slPollTimer); _slPollTimer = null; }
+}
+
+async function loadScrapeLog() {
+  $('sl-live-msg').textContent = 'Loading scrape log...';
+  try {
+    const resp = await fetch('scrape_log.json?t=' + Date.now());
+    if (!resp.ok) {
+      // No log file yet — fall back to data.json
+      _slData = _buildLogFromData();
+      if (!_slData) {
+        $('sl-no-data').style.display = '';
+        $('sl-live-msg').textContent = 'No scrape log file found — trigger a scrape first';
+        return;
+      }
+    } else {
+      _slData = await resp.json();
+    }
+    _sanitizeLog();
+    $('sl-no-data').style.display = 'none';
+    slRenderStats();
+    slRender();
+    $('sl-live-msg').textContent = 'Last scraped: ' + (_slData.finished_at || _slData.started_at || '—');
+    $('sl-live-dot').style.background = '#16a34a';
+  } catch(e) {
+    $('sl-live-msg').textContent = 'Error loading log: ' + e.message;
+    $('sl-live-dot').style.background = '#dc2626';
+  }
+}
+
+function _buildLogFromData() {
+  // Build a log from existing data.json + status info  
+  if (!_scrapedData) return null;
+  const sources = _scrapedData.sources || {};
+  const st = _scrapedData.status || {};
+  const details = [];
+  let ok = 0, err = 0, empty = 0, totalD = 0, withPdf = 0, noPdf = 0;
+
+  for (const key of ALL_KEYS) {
+    const docs = sources[key] || [];
+    const s = st[key] || {};
+    const srcInfo = SRC[key] || {};
+    const error = s.error || null;
+    const docList = Array.isArray(docs) ? docs : [];
+
+    const entry = {
+      key: key,
+      label: srcInfo.label || key,
+      category: srcInfo.cat || '',
+      website_url: srcInfo.url || '',
+      status: error ? 'error' : (docList.length === 0 ? 'empty' : 'ok'),
+      error: error,
+      doc_count: docList.length,
+      docs_with_pdf: docList.filter(d => d.pdf_url).length,
+      docs_without_pdf: docList.filter(d => !d.pdf_url).length,
+      documents: docList.map(d => ({
+        title: d.title || '',
+        date: d.date || '',
+        date_iso: d.date_iso || '',
+        page_url: d.page_url || '',
+        pdf_url: d.pdf_url || '',
+        has_pdf: !!d.pdf_url,
+        id: d.id || '',
+      }))
+    };
+
+    if (error) err++;
+    else if (docList.length === 0) empty++;
+    else ok++;
+    totalD += docList.length;
+    withPdf += entry.docs_with_pdf;
+    noPdf += entry.docs_without_pdf;
+    details.push(entry);
+  }
+
+  return {
+    started_at: _scrapedData.scraped_at || '',
+    finished_at: _scrapedData.scraped_at || '',
+    duration_seconds: 0,
+    date_range: _scrapedData.date_range || {},
+    total_sources: ALL_KEYS.length,
+    sources_scraped: ALL_KEYS.length,
+    sources_ok: ok,
+    sources_error: err,
+    sources_empty: empty,
+    total_documents: totalD,
+    docs_with_pdf: withPdf,
+    docs_without_pdf: noPdf,
+    source_details: details,
+  };
+}
+
+function _sanitizeLog() {
+  // Drop errored sources from the scrape-log drawer too, and recompute counts.
+  if (!_slData || !Array.isArray(_slData.source_details)) return;
+  _slData.source_details = _slData.source_details.filter(s => s.status !== 'error' && !HIDDEN_KEYS.has(s.key));
+  const det = _slData.source_details;
+  _slData.sources_error = 0;
+  _slData.sources_ok = det.filter(s => s.status === 'ok').length;
+  _slData.sources_empty = det.filter(s => s.status === 'empty').length;
+  _slData.sources_scraped = det.length;
+  _slData.total_sources = det.length;
+}
+
+function slRenderStats() {
+  if (!_slData) return;
+  const d = _slData;
+  $('sl-stats').innerHTML =
+    '<div class="sl-stat green"><div class="sl-stat-val">' + d.sources_ok + '</div><div class="sl-stat-label">Sources OK</div></div>' +
+    '<div class="sl-stat red"><div class="sl-stat-val">' + d.sources_error + '</div><div class="sl-stat-label">Errors</div></div>' +
+    '<div class="sl-stat amber"><div class="sl-stat-val">' + d.sources_empty + '</div><div class="sl-stat-label">Empty</div></div>' +
+    '<div class="sl-stat blue"><div class="sl-stat-val">' + d.total_documents + '</div><div class="sl-stat-label">Total Docs</div></div>' +
+    '<div class="sl-stat green"><div class="sl-stat-val">' + (d.docs_with_pdf || 0) + '</div><div class="sl-stat-label">With PDF</div></div>' +
+    '<div class="sl-stat red"><div class="sl-stat-val">' + (d.docs_without_pdf || 0) + '</div><div class="sl-stat-label">No PDF</div></div>' +
+    (d.duration_seconds > 0 ? '<div class="sl-stat"><div class="sl-stat-val">' + _fmtDur(d.duration_seconds * 1000) + '</div><div class="sl-stat-label">Duration</div></div>' : '');
+
+  $('sl-footer-left').textContent = 'Date range: ' + (d.date_range.from || d.date_range.from_iso || '—') + ' → ' + (d.date_range.to || d.date_range.to_iso || '—');
+  $('sl-footer-right').textContent = d.sources_scraped + ' sources scraped' + (d.partial_scrape ? ' (partial)' : ' (full)');
+}
+
+function slFilter(f, btn) {
+  _slFilter = f;
+  document.querySelectorAll('.sl-filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  slRender();
+}
+
+function slRender() {
+  if (!_slData || !_slData.source_details) return;
+  const q = ($('sl-search').value || '').toLowerCase();
+  const details = _slData.source_details;
+  let html = '';
+  let shown = 0;
+
+  for (const src of details) {
+    // Apply filter
+    if (_slFilter === 'ok' && src.status !== 'ok') continue;
+    if (_slFilter === 'error' && src.status !== 'error') continue;
+    if (_slFilter === 'empty' && src.status !== 'empty') continue;
+    if (_slFilter === 'no_pdf' && src.docs_without_pdf === 0) continue;
+
+    // Apply search
+    if (q) {
+      const haystack = (src.label + ' ' + src.key + ' ' + src.category + ' ' + (src.error || '') + ' ' + src.documents.map(d => d.title).join(' ')).toLowerCase();
+      if (!haystack.includes(q)) continue;
+    }
+
+    shown++;
+    const statusClass = src.status === 'ok' ? 'ok' : src.status === 'error' ? 'err' : 'empty';
+    const badge = src.status === 'ok'
+      ? '<span class="sl-badge sl-badge-ok">' + src.doc_count + ' docs</span>'
+      : src.status === 'error'
+        ? '<span class="sl-badge sl-badge-err">ERROR</span>'
+        : '<span class="sl-badge sl-badge-empty">EMPTY</span>';
+
+    html += '<div class="sl-src" id="sl-src-' + src.key + '">';
+    html += '<div class="sl-src-hdr" onclick="slToggle(\'' + src.key + '\')">';
+    html += '<span class="sl-src-dot ' + statusClass + '"></span>';
+    html += '<span class="sl-src-name">' + esc(src.label) + ' <small style="color:var(--txt3);font-weight:400">(' + esc(src.key) + ')</small></span>';
+    html += '<span class="sl-src-cat">' + esc(src.category) + '</span>';
+    html += badge;
+    if (src.docs_with_pdf > 0) html += '<span style="font-size:10px;color:var(--green);font-weight:600">' + src.docs_with_pdf + ' PDF</span>';
+    if (src.docs_without_pdf > 0) html += '<span style="font-size:10px;color:var(--red);font-weight:600">' + src.docs_without_pdf + ' no PDF</span>';
+    if (src.error) html += '<span class="sl-src-err" title="' + esc(src.error) + '">' + esc(src.error.substring(0, 60)) + '</span>';
+    html += '<span class="sl-src-arrow">▸</span>';
+    html += '</div>';
+
+    // Expanded body
+    html += '<div class="sl-src-body">';
+    if (src.website_url) {
+      html += '<a class="sl-src-link" href="' + esc(src.website_url) + '" target="_blank">🌐 ' + esc(src.website_url.substring(0, 80)) + (src.website_url.length > 80 ? '…' : '') + '</a>';
+    }
+
+    if (src.error) {
+      html += '<div style="padding:8px 12px;background:#dc262610;border:1px solid #dc262630;border-radius:4px;margin-bottom:8px;font-size:11px;color:var(--red)"><b>Error:</b> ' + esc(src.error) + '</div>';
+    }
+
+    if (src.documents && src.documents.length > 0) {
+      html += '<table class="sl-doc-table"><thead><tr>';
+      html += '<th>#</th><th>Document Name</th><th>Date</th><th>PDF</th><th>Links</th>';
+      html += '</tr></thead><tbody>';
+      src.documents.forEach((d, i) => {
+        html += '<tr>';
+        html += '<td>' + (i + 1) + '</td>';
+        html += '<td class="sl-doc-title" title="' + esc(d.title) + '">' + esc(d.title || 'Untitled') + '</td>';
+        html += '<td style="white-space:nowrap">' + esc(d.date || d.date_iso || '—') + '</td>';
+        html += '<td>' + (d.has_pdf
+          ? '<span class="sl-pdf-yes">✓ YES</span>'
+          : '<span class="sl-pdf-no">✗ NO</span>') + '</td>';
+        html += '<td style="white-space:nowrap">';
+        if (d.pdf_url) html += '<a class="sl-pdf-link" href="' + esc(d.pdf_url) + '" target="_blank">📄 PDF</a> ';
+        if (d.page_url) html += '<a class="sl-page-link" href="' + esc(d.page_url) + '" target="_blank">↗ Source</a>';
+        if (!d.pdf_url && !d.page_url) html += '<span style="color:var(--txt3);font-size:10px">—</span>';
+        html += '</td></tr>';
+      });
+      html += '</tbody></table>';
+    } else if (src.status !== 'error') {
+      html += '<div style="padding:12px;text-align:center;color:var(--txt3);font-size:11px">No documents found for this source in the current date range</div>';
+    }
+    html += '</div></div>';
+  }
+
+  if (shown === 0) {
+    html = '<div style="padding:40px;text-align:center;color:var(--txt3);font-size:12px">No sources match the current filter</div>';
+  }
+
+  $('sl-body').innerHTML = html;
+}
+
+function slToggle(key) {
+  const el = $('sl-src-' + key);
+  if (el) el.classList.toggle('open');
+}
+
+init();
+</script>
+</body>
+</html>

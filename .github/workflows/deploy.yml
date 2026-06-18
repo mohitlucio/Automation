@@ -1,0 +1,27 @@
+name: Deploy to Render
+
+on:
+  # Auto-deploy is disabled on the public showcase repo so Actions stays green
+  # with no secrets configured. To enable continuous deploy to Render: add the
+  # RENDER_SERVICE_ID and RENDER_API_TOKEN repo secrets, then uncomment the
+  # push / pull_request triggers below.
+  workflow_dispatch:
+  # push:
+  #   branches: [main, master]
+  # pull_request:
+  #   branches: [main, master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Deploy to Render
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          api-token: ${{ secrets.RENDER_API_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
